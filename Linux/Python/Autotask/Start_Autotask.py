@@ -79,18 +79,10 @@ def login_autotask():
         print("Warte auf das Dashboard...")
         time.sleep(10)  # Längere Wartezeit für das vollständige Laden
         
-        # Wallboard auswählen
-        print("Wähle Wallboard aus...")
-        wallboard = WebDriverWait(driver, 20).until(
-            EC.element_to_be_clickable((By.XPATH, "//div[@title='Wallboard']"))
-        )
-        wallboard.click()
-        time.sleep(5)
-        
         # Dropdown-Menü öffnen
         print("Öffne Dropdown-Menü...")
         dropdown = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CLASS_NAME, "TitleBarContextMenuButton1"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button.c-button--icon-only"))
         )
         dropdown.click()
         time.sleep(2)
@@ -98,25 +90,25 @@ def login_autotask():
         # Präsentationsmodus auswählen
         print("Wähle Präsentationsmodus...")
         presentation_mode = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//div[text()='Präsentationsmodus']"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button.o-standard-menu-item[aria-label='Präsentationsmodus']"))
         )
         presentation_mode.click()
         time.sleep(2)
         
-        # Option "Nichts" auswählen
-        print("Wähle Option 'Nichts'...")
-        nothing_option = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//span[contains(text(), 'Nichts (weder Filterwert')]"))
-        )
-        nothing_option.click()
-        time.sleep(2)
-        
         # Präsentationsmodus starten
         print("Starte Präsentationsmodus...")
-        start_presentation = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//div[text()='Präsentationsmodus starten']"))
-        )
-        start_presentation.click()
+        try:
+            # Neuer Selektor für den Button
+            start_presentation = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "div.ValidationSummary"))
+            )
+            start_presentation.click()
+        except:
+            # Fallback zum alten Selektor falls nötig
+            start_presentation = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//div[text()='Präsentationsmodus starten']"))
+            )
+            start_presentation.click()
         
         print("Alle Aktionen erfolgreich durchgeführt!")
         print("Chrome bleibt geöffnet!")
