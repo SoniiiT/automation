@@ -1,0 +1,7 @@
+# Core dependencies
+pandas>=2.0.0
+openpyxl>=3.1.0
+
+# Optional: für erweiterte Funktionen
+xlsxwriter>=3.0.0
+chardet>=5.0.0  # Für automatische Encoding-Erkennung
