@@ -1,0 +1,15 @@
+# Documentation Scraper - Abhängigkeiten
+
+# HTTP Requests
+requests>=2.31.0
+
+# HTML Parsing
+beautifulsoup4>=4.12.0
+lxml>=5.1.0  # Schnellerer Parser
+
+# HTML zu Markdown Konvertierung
+markdownify>=0.12.0
+
+# Optional: Für bessere Erkennung von JavaScript-generierten Inhalten
+# selenium>=4.15.0  # Für JS-Seiten (falls benötigt)
+# playwright>=1.40.0  # Alternative zu Selenium
