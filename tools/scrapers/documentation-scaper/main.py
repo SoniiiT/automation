@@ -65,7 +65,7 @@ class ScraperConfig:
     exclude_patterns: list = field(default_factory=list)
     single_file: bool = False  # Alle Inhalte in einer Datei
     respect_robots: bool = True
-    max_pages: int = 1000  # Maximale Anzahl der Seiten
+    max_pages: int = 0  # Maximale Anzahl der Seiten (0 = unbegrenzt)
     verify_ssl: bool = True  # SSL-Zertifikate verifizieren
 
 
@@ -490,7 +490,7 @@ class DocumentationScraper:
         if url in self.visited_urls:
             return set()
         
-        if len(self.visited_urls) >= self.config.max_pages:
+        if self.config.max_pages > 0 and len(self.visited_urls) >= self.config.max_pages:
             logger.warning(f"Maximale Seitenanzahl ({self.config.max_pages}) erreicht")
             return set()
         
@@ -547,7 +547,7 @@ class DocumentationScraper:
             next_level = set()
             
             for url in to_visit:
-                if len(self.visited_urls) >= self.config.max_pages:
+                if self.config.max_pages > 0 and len(self.visited_urls) >= self.config.max_pages:
                     break
                     
                 new_links = self.scrape_page(url, current_depth)
@@ -750,8 +750,8 @@ Beispiele:
     parser.add_argument(
         '--max-pages',
         type=int,
-        default=500,
-        help='Maximale Anzahl der zu scrapenden Seiten (Standard: 500)'
+        default=0,
+        help='Maximale Anzahl der zu scrapenden Seiten (Standard: 0 = unbegrenzt)'
     )
     
     parser.add_argument(

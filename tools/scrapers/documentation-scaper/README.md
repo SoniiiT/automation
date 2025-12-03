@@ -95,7 +95,7 @@ python main.py https://docs.docker.com/ \
 | `--output` | `-o` | Output-Verzeichnis | `output` |
 | `--depth` | `-d` | Maximale Rekursionstiefe | `5` |
 | `--delay` | - | Sekunden zwischen Requests | `1.0` |
-| `--max-pages` | - | Maximale Seitenanzahl | `500` |
+| `--max-pages` | - | Maximale Seitenanzahl (0 = unbegrenzt) | `0` |
 | `--single-file` | - | Alles in einer Datei speichern | `False` |
 | `--include` | - | URL-Pattern einschließen (Regex) | `[]` |
 | `--exclude` | - | URL-Pattern ausschließen (Regex) | `[]` |
