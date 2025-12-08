@@ -17,6 +17,9 @@ Dieses Repository enthält verschiedene nützliche Skripte, organisiert nach Fun
 ### Web Automation
 - **Autotask**: Automatisierte Web-Aufgaben mit Selenium
 
+### TUI (Terminal User Interface)
+- **Aisel**: TUI-Launcher für AI CLI-Tools (gemini, cursor-agent, claude, etc.) - vereinfacht den Zugriff auf verschiedene AI-CLIs über ein interaktives Menü
+
 ## 🚀 Deployment
 - **Kubernetes**: Multi-Master Cluster Setup-Scripts für verschiedene Ubuntu-Versionen
 - **Windows Autopilot**: PowerShell-Scripts für Gaming-PC und System-Setup
