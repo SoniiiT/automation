@@ -1,0 +1,79 @@
+---
+- name: Einrichten und Mounten einer Festplatte
+  hosts: k3s_cluster
+  become: true
+  vars:
+    disk_device: "/dev/vdb"  # Variable für die Festplatte
+    mount_point: "/mnt/kubernetes"  # Mount-Punkt
+    filesystem_type: "ext4"  # Dateisystem-Typ
+
+  tasks:
+    - name: Prüfen ob Festplatte existiert
+      ansible.builtin.stat:
+        path: "{{ disk_device }}"
+      register: disk_exists
+
+    - name: Fehler ausgeben wenn Festplatte nicht existiert
+      ansible.builtin.fail:
+        msg: "Die Festplatte {{ disk_device }} existiert nicht!"
+      when: not disk_exists.stat.exists
+
+    - name: Prüfen ob Festplatte bereits partitioniert ist
+      ansible.builtin.shell: "lsblk -f {{ disk_device }} | grep -q '{{ disk_device }}1'"
+      register: partition_check
+      ignore_errors: true
+      changed_when: false
+
+    - name: Partition erstellen wenn nicht vorhanden
+      ansible.builtin.shell: |
+        echo 'type=83' | sfdisk {{ disk_device }}
+      when: partition_check.rc != 0
+      register: partition_result
+
+    - name: Warten bis Partition verfügbar ist
+      ansible.builtin.wait_for:
+        path: "{{ disk_device }}1"
+        timeout: 10
+      when: partition_check.rc != 0
+
+    - name: Partition formatieren
+      ansible.builtin.shell: |
+        mkfs.{{ filesystem_type }} {{ disk_device }}1
+      register: format_result
+      changed_when: true
+
+    - name: Mount-Punkt erstellen
+      ansible.builtin.file:
+        path: "{{ mount_point }}"
+        state: directory
+        mode: '0755'
+
+    - name: Prüfen ob Festplatte bereits gemountet ist
+      ansible.builtin.shell: "mount | grep {{ mount_point }}"
+      register: mount_check
+      ignore_errors: true
+      changed_when: false
+
+    - name: Festplatte mounten wenn nicht bereits gemountet
+      ansible.builtin.shell: |
+        mount {{ disk_device }}1 {{ mount_point }}
+      when: mount_check.rc != 0
+      register: mount_result
+
+    - name: fstab Eintrag erstellen
+      ansible.builtin.lineinfile:
+        path: /etc/fstab
+        line: "{{ disk_device }}1 {{ mount_point }} {{ filesystem_type }} defaults 0 0"
+        state: present
+        create: true
+      when: mount_check.rc != 0
+
+    - name: Mount-Status überprüfen
+      ansible.builtin.shell: "df -h {{ mount_point }}"
+      register: mount_status
+      changed_when: false
+      failed_when: mount_status.rc != 0
+
+    - name: Mount-Status ausgeben
+      ansible.builtin.debug:
+        msg: "{{ mount_status.stdout_lines }}"

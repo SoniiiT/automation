@@ -1,0 +1,57 @@
+---
+- name: Erweitern einer gemounteten Festplatte
+  hosts: k3s_cluster
+  become: true
+  vars:
+    disk_device: "/dev/vdb"  # Variable für die Festplatte
+    mount_point: "/mnt/kubernetes"  # Mount-Punkt
+    filesystem_type: "ext4"  # Dateisystem-Typ
+
+  tasks:
+    - name: Prüfen ob Festplatte existiert
+      ansible.builtin.stat:
+        path: "{{ disk_device }}"
+      register: disk_exists
+
+    - name: Fehler ausgeben wenn Festplatte nicht existiert
+      ansible.builtin.fail:
+        msg: "Die Festplatte {{ disk_device }} existiert nicht!"
+      when: not disk_exists.stat.exists
+
+    - name: Prüfen ob Festplatte gemountet ist
+      ansible.builtin.mount:
+        path: "{{ mount_point }}"
+      register: mount_info
+
+    - name: Fehler ausgeben wenn Festplatte nicht gemountet ist
+      ansible.builtin.fail:
+        msg: "Die Festplatte {{ disk_device }} ist nicht unter {{ mount_point }} gemountet!"
+      when: not mount_info.mounted
+
+    - name: Partitionstabelle erweitern
+      ansible.builtin.command: "growpart {{ disk_device }} 1"
+      register: growpart_result
+      ignore_errors: true
+
+    - name: Fehler ausgeben wenn growpart fehlschlägt
+      ansible.builtin.fail:
+        msg: "Fehler beim Erweitern der Partition: {{ growpart_result.stderr }}"
+      when: growpart_result.rc != 0
+
+    - name: Dateisystem erweitern
+      ansible.builtin.command: "resize2fs {{ disk_device }}1"
+      register: resize_result
+      ignore_errors: true
+
+    - name: Fehler ausgeben wenn resize2fs fehlschlägt
+      ansible.builtin.fail:
+        msg: "Fehler beim Erweitern des Dateisystems: {{ resize_result.stderr }}"
+      when: resize_result.rc != 0
+
+    - name: Verfügbaren Speicherplatz anzeigen
+      ansible.builtin.command: "df -h {{ mount_point }}"
+      register: df_result
+
+    - name: Speicherplatz ausgeben
+      ansible.builtin.debug:
+        msg: "Aktueller Speicherplatz: {{ df_result.stdout_lines[1] }}"

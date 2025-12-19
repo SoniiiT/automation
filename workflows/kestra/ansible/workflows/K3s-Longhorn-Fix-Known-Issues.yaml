@@ -1,0 +1,28 @@
+id: K3s-Longhorn-Fix-Known-Issues
+namespace: ansible
+labels:
+  Project: Homelab
+  Mode: Manual
+
+tasks:
+- id: setup
+  type: io.kestra.plugin.core.flow.WorkingDirectory
+  tasks:
+  - id: local_files
+    type: io.kestra.plugin.core.storage.LocalFiles
+    inputs:
+      inventory-k3s.yaml: "{{ read('inventory-k3s.yaml') }}"
+      longhorn-fix-known-issues.yaml: "{{ read('longhorn-fix-known-issues.yaml') }}"
+      id_rsa: "{{ secret('SSH_KEY') }}"
+
+  - id: ansible_task
+    type: io.kestra.plugin.ansible.cli.AnsibleCLI
+    containerImage: cytopia/ansible:latest-tools
+    taskRunner:
+      type: io.kestra.plugin.scripts.runner.docker.Docker
+      pullPolicy: IF_NOT_PRESENT
+    beforeCommands:
+    - apk add --no-cache sshpass
+    - chmod 600 id_rsa
+    commands:
+    - ansible-playbook -i inventory-k3s.yaml --key-file id_rsa longhorn-fix-known-issues.yaml

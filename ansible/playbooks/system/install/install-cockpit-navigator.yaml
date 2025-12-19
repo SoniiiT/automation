@@ -1,0 +1,25 @@
+---
+- name: Install Cockpit Navigator
+  hosts: all
+  become: true
+  tasks:
+    - name: Download Cockpit Navigator DEB package
+      get_url:
+        url: "https://github.com/45Drives/cockpit-navigator/releases/download/v0.5.10/cockpit-navigator_0.5.10-1focal_all.deb"
+        dest: "/tmp/cockpit-navigator.deb"
+        mode: '0644'
+
+    - name: Install Cockpit Navigator package
+      apt:
+        deb: "/tmp/cockpit-navigator.deb"
+        state: present
+
+    - name: Clean up downloaded package
+      file:
+        path: "/tmp/cockpit-navigator.deb"
+        state: absent
+
+    - name: Restart Cockpit service
+      systemd:
+        name: cockpit
+        state: restarted

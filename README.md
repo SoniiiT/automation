@@ -1,30 +1,49 @@
-# Scripts Repository
+# Automation & Routines
 
-Dieses Repository enthält verschiedene nützliche Skripte, organisiert nach Funktionalität:
+Dieses Repository dient als zentrale Sammelstelle ("Monorepo") für meine gesamte IT-Automatisierung, Infrastruktur-Konfiguration und Skripte.
 
-## 🛠️ Tools
-### Automation
-- **Anti-AFK**: Python-Script für Gaming Anti-AFK Funktionalität
-- **Voice Assistant**: Sprachassistent mit Website- und Programmsteuerung
-- **System Cleanup**: Linux System-Bereinigungstools
+## 📂 Struktur
 
-### Converters
-- **CSV to Excel**: Konvertiert CSV-Dateien zu Excel-Format
+### 🤖 [Ansible](./ansible)
+Konfigurationsmanagement und Provisionierung.
+- **Inventory**: Host-Definitionen.
+- **Playbooks**: Automatisierte Abläufe für Server-Setup.
+- **Roles**: Wiederverwendbare Aufgaben-Pakete.
 
-### Gaming
-- **Minecraft Modpack**: Erstellt Server-Modpacks aus CurseForge/Modrinth Links
+### 🔄 [Workflows](./workflows)
+Orchestrierung und komplexe Abläufe.
+- **[Kestra](./workflows/kestra)**: YAML-basierte Flows für System-Orchestrierung.
+- **[N8N](./workflows/n8n)**: Exportierte JSON-Workflows für Web-Automatisierung und Integrationen.
 
-### Web Automation
-- **Autotask**: Automatisierte Web-Aufgaben mit Selenium
+### ☸️ [Kubernetes](./kubernetes)
+Cluster-Setup und Manifeste.
+- **Clusters**: Setup-Skripte für Multi-Master Cluster (Ubuntu).
+- **Manifests**: Kubernetes YAML Ressourcen.
 
-### TUI (Terminal User Interface)
-- **Aisel**: TUI-Launcher für AI CLI-Tools (gemini, cursor-agent, claude, etc.) - vereinfacht den Zugriff auf verschiedene AI-CLIs über ein interaktives Menü
+### 📜 [Scripts](./scripts)
+Sammlung von Standalone-Skripten und Tools.
 
-## 🚀 Deployment
-- **Kubernetes**: Multi-Master Cluster Setup-Scripts für verschiedene Ubuntu-Versionen
-- **Windows Autopilot**: PowerShell-Scripts für Gaming-PC und System-Setup
+#### 🛠️ [Maintenance](./scripts/maintenance)
+Wartung und Hintergrund-Tasks.
+- **System Cleanup**: Bereinigungsskripte.
+- **Anti-AFK**: Automatisierungstools.
+- **Voice Assistant**: Sprachsteuerung.
 
-## 🖥️ Platform Specific
-- **Linux**: Plattformspezifische Linux-Tools
-- **Windows**: Plattformspezifische Windows-Tools  
-- **macOS**: Plattformspezifische macOS-Tools
+#### 🎮 [Gaming](./scripts/gaming)
+Skripte rund um Gaming-Server.
+- **Minecraft**: Modpack-Erstellung und Server-Management.
+
+#### 💻 [Setup](./scripts/setup)
+Initiale Einrichtung von Arbeitsumgebungen.
+- **Windows**: Autopilot, Debloat-Skripte.
+- **Linux**: Dotfiles-Setup, Basis-Konfiguration.
+- **macOS**: Einrichtungsskripte.
+
+#### 🔧 [Utils](./scripts/utils)
+Hilfsprogramme und Konverter.
+- **Converters**: CSV zu Excel etc.
+- **Scrapers**: Dokumentations-Scraper.
+- **TUI**: Terminal Interfaces (z.B. Aisel).
+
+---
+*Generiert für das konsolidierte Automation-Repository.*

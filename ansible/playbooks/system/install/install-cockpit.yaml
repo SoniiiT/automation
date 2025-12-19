@@ -1,0 +1,28 @@
+---
+- name: Install and configure Cockpit
+  hosts: all
+  become: true
+  tasks:
+    - name: Install Cockpit package
+      package:
+        name: 
+          - cockpit
+        state: present
+
+    - name: Enable and start Cockpit service
+      systemd:
+        name: cockpit.socket
+        state: started
+        enabled: true
+
+    - name: Open firewall for Cockpit (if firewalld is used)
+      firewalld:
+        port: 9090/tcp
+        permanent: true
+        state: enabled
+      ignore_errors: true
+
+    - name: Ensure Cockpit is accessible
+      wait_for:
+        port: 9090
+        timeout: 30
