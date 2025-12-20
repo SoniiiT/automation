@@ -1,0 +1,48 @@
+---
+- name: Mount Docker Data Disk
+  hosts: docker
+  become: true
+  vars:
+    # Default device path, change this if your second disk is different (e.g., /dev/vdb, /dev/nvme0n1)
+    disk_device: /dev/sdb
+    mount_point: /mnt/docker
+    filesystem: ext4
+
+  tasks:
+    - name: Install parted
+      package:
+        name: parted
+        state: present
+
+    - name: Read device information
+      community.general.parted:
+        device: "{{ disk_device }}"
+        unit: MiB
+      register: disk_info
+
+    - name: Create partition on the disk
+      community.general.parted:
+        device: "{{ disk_device }}"
+        number: 1
+        state: present
+        part_end: "100%"
+      when: disk_info.partitions | length == 0
+
+    - name: Create filesystem on the partition
+      filesystem:
+        fstype: "{{ filesystem }}"
+        dev: "{{ disk_device }}1"
+
+    - name: Create mount directory
+      file:
+        path: "{{ mount_point }}"
+        state: directory
+        mode: '0755'
+
+    - name: Mount the disk and add to fstab
+      ansible.posix.mount:
+        path: "{{ mount_point }}"
+        src: "{{ disk_device }}1"
+        fstype: "{{ filesystem }}"
+        opts: defaults
+        state: mounted

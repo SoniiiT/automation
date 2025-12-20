@@ -1,0 +1,44 @@
+---
+- name: Install Portainer (Server or Agent)
+  hosts: docker
+  become: true
+  vars:
+    # Set this to 'true' for the main server, 'false' for agent nodes (Agent only)
+    install_server: false 
+
+  tasks:
+    # --- Portainer Server Installation ---
+    - name: Create Portainer Data Volume (Server only)
+      command: docker volume create portainer_data
+      when: install_server | bool
+      register: volume_create
+      changed_when: "'portainer_data' not in volume_create.stdout"
+
+    - name: Check if Portainer Server is running
+      command: docker ps -q -f name=portainer
+      when: install_server | bool
+      register: portainer_running
+      changed_when: false
+
+    - name: Run Portainer Server Container
+      command: >
+        docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always
+        -v /var/run/docker.sock:/var/run/docker.sock
+        -v portainer_data:/data
+        portainer/portainer-ce:latest
+      when: (install_server | bool) and (portainer_running.stdout == "")
+
+    # --- Portainer Agent Installation ---
+    - name: Check if Portainer Agent is running
+      command: docker ps -q -f name=portainer_agent
+      when: not (install_server | bool)
+      register: agent_running
+      changed_when: false
+
+    - name: Run Portainer Agent Container
+      command: >
+        docker run -d -p 9001:9001 --name portainer_agent --restart=always
+        -v /var/run/docker.sock:/var/run/docker.sock
+        -v /var/lib/docker/volumes:/var/lib/docker/volumes
+        portainer/agent:latest
+      when: (not (install_server | bool)) and (agent_running.stdout == "")

@@ -1,0 +1,25 @@
+---
+- name: Configure Docker Log Rotation
+  hosts: docker
+  become: true
+
+  tasks:
+    - name: Configure daemon.json for log rotation
+      copy:
+        dest: /etc/docker/daemon.json
+        content: |
+          {
+            "log-driver": "json-file",
+            "log-opts": {
+              "max-size": "10m",
+              "max-file": "3"
+            }
+          }
+        mode: '0644'
+      notify: Restart Docker
+
+  handlers:
+    - name: Restart Docker
+      service:
+        name: docker
+        state: restarted

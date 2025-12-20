@@ -1,0 +1,15 @@
+---
+- name: Setup Docker Maintenance Cronjobs
+  hosts: docker
+  become: true
+
+  tasks:
+    - name: Create daily cron job for Docker System Prune
+      ansible.builtin.cron:
+        name: "Docker System Prune"
+        minute: "0"
+        hour: "3" # Daily at 03:00 AM
+        # Prunes stopped containers, unused networks, and dangling images.
+        # Add --volumes if you want to delete unused volumes as well (Use with caution!)
+        job: "/usr/bin/docker system prune -af >> /var/log/docker_prune.log 2>&1"
+        state: present
