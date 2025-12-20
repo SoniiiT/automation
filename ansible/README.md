@@ -23,3 +23,12 @@ Stelle sicher, dass Ansible installiert ist und du Zugriff auf die privaten SSH-
 **Beispiel: System Updates ausführen**
 ```bash
 ansible-playbook -i inventory/inventory.yaml playbooks/system/update-upgrade.yaml
+```
+
+**How to install Ansible**
+```bash
+sudo apt update
+sudo apt install -y software-properties-common
+sudo add-apt-repository --yes --update ppa:ansible/ansible
+sudo apt install -y ansible
+```
