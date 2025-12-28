@@ -9,6 +9,8 @@ all:
       ansible_host: 192.168.178.40
     lxc-pterodactyl-wings:
       ansible_host: 192.168.178.41
+    lxc-cloudflared:
+      ansible_host: 192.168.178.44
     lxc-wireguard:
       ansible_host: 192.168.178.45
     lxc-unifi-controller:
@@ -66,6 +68,7 @@ all:
       hosts:
         lxc-pterodactyl-panel:
         lxc-pterodactyl-wings:
+        lxc-cloudflared:
         lxc-wireguard:
         lxc-unifi-controller:
         lxc-semaphore:
@@ -104,6 +107,7 @@ all:
       hosts:
         lxc-pterodactyl-panel:
         lxc-pterodactyl-wings:
+        lxc-cloudflared:
         lxc-wireguard:
         lxc-semaphore:
         docker-srv-01:
