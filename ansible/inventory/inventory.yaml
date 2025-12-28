@@ -1,122 +1,141 @@
 all:
+  hosts:
+    # --- Proxmox Server ---
+    pve-srv-01:
+      ansible_host: 192.168.178.6
+
+    # --- LXC Hosts ---
+    lxc-pterodactyl-panel:
+      ansible_host: 192.168.178.40
+    lxc-pterodactyl-wings:
+      ansible_host: 192.168.178.41
+    lxc-wireguard:
+      ansible_host: 192.168.178.45
+    lxc-unifi-controller:
+      ansible_host: 192.168.178.51
+    lxc-semaphore:
+      ansible_host: 192.168.178.50
+    github-runner-packer:
+      ansible_host: 192.168.178.72
+    github-runner-terraform:
+      ansible_host: 192.168.178.70
+
+    # --- VM Hosts ---
+
+    # Docker Servers
+    docker-srv-01:
+      ansible_host: 192.168.178.30
+    docker-srv-02:
+      ansible_host: 192.168.178.31
+    docker-srv-03:
+      ansible_host: 192.168.178.32
+    
+    # App Servers
+    app-srv-01:
+      ansible_host: 192.168.178.80
+    app-srv-02:
+      ansible_host: 192.168.178.81
+    app-srv-03:
+      ansible_host: 192.168.178.82
+
+    # K3s Cluster
+    # k3s-soniiit-server01:
+    #   ansible_host: 192.168.178.11
+    # k3s-soniiit-server02:
+    #   ansible_host: 192.168.178.12
+    # k3s-soniiit-server03:
+    #   ansible_host: 192.168.178.13
+    # k3s-soniiit-agent01:
+    #   ansible_host: 192.168.178.20
+    # k3s-soniiit-agent02:
+    #   ansible_host: 192.168.178.21
+    # k3s-soniiit-agent03:
+    #   ansible_host: 192.168.178.22
+
   children:
-    proxmox:
+    # --- Infrastructure Groups ---
+    proxmox_servers:
+      vars:
+        ansible_user: root
       hosts:
         pve-srv-01:
-          ansible_host: 192.168.178.6
-          ansible_user: root
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-    docker:
+
+    lxc_hosts:
+      vars:
+        ansible_user: root
       hosts:
-        docker-srv-01:
-          ansible_host: 192.168.178.30
-          ansible_user: soniiit
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-        docker-srv-02:
-          ansible_host: 192.168.178.31
-          ansible_user: soniiit
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-        docker-srv-03:
-          ansible_host: 192.168.178.32
-          ansible_user: soniiit
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-    appservers:
+        lxc-pterodactyl-panel:
+        lxc-pterodactyl-wings:
+        lxc-wireguard:
+        lxc-unifi-controller:
+        lxc-semaphore:
+        github-runner-packer:
+        github-runner-terraform:
+
+    vm_hosts:
+      vars:
+        ansible_user: soniiit
       hosts:
         app-srv-01:
-          ansible_host: 192.168.178.80
-          ansible_user: soniiit
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
         app-srv-02:
-          ansible_host: 192.168.178.81
-          ansible_user: soniiit
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
         app-srv-03:
-          ansible_host: 192.168.178.82
-          ansible_user: soniiit
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-    github-agents:
-      hosts:
-        LXC-Github-Runner-Terraform:
-          ansible_host: 192.168.178.70
-          ansible_user: root
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-        LXC-Github-Runner-Packer:
-          ansible_host: 192.168.178.72
-          ansible_user: root
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-    LinuxContainers:
-      hosts:
-        LXC-Pterodactyl-bind9:
-          ansible_host: 192.168.178.3
-          ansible_user: root
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-        LXC-Pterodactyl-Panel:
-          ansible_host: 192.168.178.40
-          ansible_user: root
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-        LXC-Pterodactyl-Wings:
-          ansible_host: 192.168.178.41
-          ansible_user: root
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-        LXC-Wazuh:
-          ansible_host: 192.168.178.42
-          ansible_user: root
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-        LXC-Cloudflared:
-          ansible_host: 192.168.178.43
-          ansible_user: root
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-        LXC-Harbor:
-          ansible_host: 192.168.178.44
-          ansible_user: root
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-        LXC-Omni:
-          ansible_host: 192.168.178.45
-          ansible_user: root
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-        LXC-Teleport-Server:
-          ansible_host: 192.168.178.46
-          ansible_user: root
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-        LXC-Nextcloud:
-          ansible_host: 192.168.178.47
-          ansible_user: root
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-        LXC-Syncthing:
-          ansible_host: 192.168.178.48
-          ansible_user: root
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-        LXC-Teleport-Proxy:
-          ansible_host: 192.168.178.49
-          ansible_user: root
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-    home:
-      hosts:
-        jellifin-home-01:
-          ansible_host: 192.168.178.98
-          ansible_user: soniiit
-          ansible_ssh_private_key_file: id_rsa
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+        docker-srv-01:
+        docker-srv-02:
+        docker-srv-03:
 
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
+    # --- Functional Groups ---
+    application_servers:
+      hosts:
+        app-srv-01:
+        app-srv-02:
+        app-srv-03:
+
+    #demo_servers:
+    #  hosts:
+    #    srv-demo-01:
+    #    srv-demo-02:
+
+    #development_servers:
+    #  hosts:
+    #    srv-dev-01:
+    #    srv-dev-02:
+
+    docker_servers:
+      hosts:
+        lxc-pterodactyl-panel:
+        lxc-pterodactyl-wings:
+        lxc-wireguard:
+        lxc-semaphore:
+        docker-srv-01:
+        docker-srv-02:
+        docker-srv-03:
+
+    github_agents:
+      hosts:
+        github-runner-packer:
+        github-runner-terraform:
+
+    lxc_servers:
+      hosts:
+        lxc-pterodactyl-panel:
+        lxc-pterodactyl-wings:
+        lxc-wireguard:
+        lxc-unifi-controller:
+        lxc-semaphore:
+
+    # k3s_cluster:
+    #   vars:
+    #     kubernetes_vip: 192.168.178.10
+    #     kubernetes_interface: eth0
+    #     kubernetes_range_global: 192.168.178.30-192.168.178.39
+    #   children:
+    #     k3s_servers:
+    #       hosts:
+    #         k3s-soniiit-server01:
+    #         k3s-soniiit-server02:
+    #         k3s-soniiit-server03:
+    #     k3s_agents:
+    #       hosts:
+    #         k3s-soniiit-agent01:
+    #         k3s-soniiit-agent02:
+    #         k3s-soniiit-agent03:
