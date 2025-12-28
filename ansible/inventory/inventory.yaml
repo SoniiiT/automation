@@ -68,6 +68,10 @@ all:
     # k3s-soniiit-agent03:
     #   ansible_host: 192.168.178.22
 
+    # Home Servers
+    jellyfin-home-01:
+      ansible_host: 192.168.178.98
+
   children:
     # --- Infrastructure Groups ---
     proxmox_servers:
@@ -80,12 +84,19 @@ all:
       vars:
         ansible_user: root
       hosts:
+        lxc-bind9:
         lxc-pterodactyl-panel:
         lxc-pterodactyl-wings:
+        lxc-harbor:
+        lxc-paperless-ngx:
         lxc-cloudflared:
         lxc-wireguard:
-        lxc-unifi-controller:
+        lxc-remotely:
+        lxc-teleport-server:
+        lxc-teleport-proxy:
+        lxc-twingate-connectors:
         lxc-semaphore:
+        lxc-unifi-controller:
         github-runner-packer:
         github-runner-terraform:
 
@@ -99,6 +110,7 @@ all:
         docker-srv-01:
         docker-srv-02:
         docker-srv-03:
+        jellyfin-home-01:
 
     # --- Functional Groups ---
     application_servers:
@@ -119,10 +131,16 @@ all:
 
     docker_servers:
       hosts:
+        lxc-bind9:
         lxc-pterodactyl-panel:
         lxc-pterodactyl-wings:
+        lxc-harbor:
+        lxc-paperless-ngx:
         lxc-cloudflared:
         lxc-wireguard:
+        lxc-remotely:
+        lxc-teleport-server:
+        lxc-twingate-connectors:
         lxc-semaphore:
         docker-srv-01:
         docker-srv-02:
@@ -132,14 +150,6 @@ all:
       hosts:
         github-runner-packer:
         github-runner-terraform:
-
-    lxc_servers:
-      hosts:
-        lxc-pterodactyl-panel:
-        lxc-pterodactyl-wings:
-        lxc-wireguard:
-        lxc-unifi-controller:
-        lxc-semaphore:
 
     # k3s_cluster:
     #   vars:
