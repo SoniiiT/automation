@@ -1,0 +1,133 @@
+---
+- name: Install Doppler CLI
+  hosts: all
+  become: true
+
+  tasks:
+    # --- Debian / Ubuntu Family ---
+    - name: Install prerequisites (Debian/Ubuntu)
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+        state: present
+        update_cache: true
+      when: ansible_os_family == 'Debian'
+
+    # Modern Debian/Ubuntu (Debian 11+, Ubuntu 22.04+)
+    - name: Download and dearmor Doppler GPG key (Modern Debian/Ubuntu)
+      shell: |
+        curl -sLf --retry 3 --tlsv1.2 --proto "=https" 'https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key' | gpg --dearmor -o /usr/share/keyrings/doppler-archive-keyring.gpg
+      args:
+        creates: /usr/share/keyrings/doppler-archive-keyring.gpg
+      when: >
+        ansible_os_family == 'Debian' and
+        (
+          (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version | int >= 22) or
+          (ansible_distribution == 'Debian' and ansible_distribution_major_version | int >= 11)
+        )
+
+    - name: Add Doppler repository (Modern Debian/Ubuntu)
+      copy:
+        dest: /etc/apt/sources.list.d/doppler-cli.list
+        content: "deb [signed-by=/usr/share/keyrings/doppler-archive-keyring.gpg] https://packages.doppler.com/public/cli/deb/debian any-version main"
+        mode: '0644'
+      when: >
+        ansible_os_family == 'Debian' and
+        (
+          (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version | int >= 22) or
+          (ansible_distribution == 'Debian' and ansible_distribution_major_version | int >= 11)
+        )
+
+    # Older Debian/Ubuntu
+    - name: Add Doppler GPG key (Older Debian/Ubuntu)
+      apt_key:
+        url: https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key
+        state: present
+      when: >
+        ansible_os_family == 'Debian' and
+        (
+          (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version | int < 22) or
+          (ansible_distribution == 'Debian' and ansible_distribution_major_version | int < 11)
+        )
+
+    - name: Add Doppler repository (Older Debian/Ubuntu)
+      copy:
+        dest: /etc/apt/sources.list.d/doppler-cli.list
+        content: "deb https://packages.doppler.com/public/cli/deb/debian any-version main"
+        mode: '0644'
+      when: >
+        ansible_os_family == 'Debian' and
+        (
+          (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version | int < 22) or
+          (ansible_distribution == 'Debian' and ansible_distribution_major_version | int < 11)
+        )
+
+    - name: Install Doppler (Debian/Ubuntu)
+      apt:
+        name: doppler
+        state: latest
+        update_cache: true
+      when: ansible_os_family == 'Debian'
+
+    # --- Alpine Linux ---
+    - name: Install prerequisites (Alpine)
+      apk:
+        name:
+          - curl
+          - gnupg
+        state: present
+      when: ansible_os_family == 'Alpine'
+
+    - name: Download Doppler key (Alpine)
+      get_url:
+        url: https://packages.doppler.com/public/cli/rsa.8004D9FF50437357.key
+        dest: /etc/apk/keys/cli@doppler-8004D9FF50437357.rsa.pub
+      when: ansible_os_family == 'Alpine'
+
+    - name: Add Doppler repository (Alpine)
+      lineinfile:
+        path: /etc/apk/repositories
+        line: 'https://packages.doppler.com/public/cli/alpine/any-version/main'
+        state: present
+      when: ansible_os_family == 'Alpine'
+
+    - name: Install Doppler (Alpine)
+      apk:
+        name: doppler
+        state: latest
+        update_cache: true
+      when: ansible_os_family == 'Alpine'
+
+    # --- RedHat / CentOS / Fedora ---
+    - name: Import Doppler GPG key (RedHat)
+      rpm_key:
+        state: present
+        key: https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key
+      when: ansible_os_family == 'RedHat'
+
+    - name: Add Doppler repository (RedHat)
+      get_url:
+        url: https://packages.doppler.com/public/cli/config.rpm.txt
+        dest: /etc/yum.repos.d/doppler-cli.repo
+        mode: '0644'
+      when: ansible_os_family == 'RedHat'
+
+    - name: Install Doppler (RedHat)
+      dnf:
+        name: doppler
+        state: latest
+        update_cache: true
+      when: ansible_os_family == 'RedHat'
+
+    # --- Verification ---
+    - name: Verify Doppler installation
+      command: doppler --version
+      register: doppler_version
+      changed_when: false
+
+    - name: Print Doppler version
+      debug:
+        msg: "Doppler version: {{ doppler_version.stdout }}"
