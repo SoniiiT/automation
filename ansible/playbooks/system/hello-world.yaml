@@ -1,7 +1,6 @@
 ---
 - name: Hello World Test
-  hosts: localhost
-  connection: local
+  hosts: all
   tasks:
     - name: Run echo command
       ansible.builtin.command: echo "Hello World"
