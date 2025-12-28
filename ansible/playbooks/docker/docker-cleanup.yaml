@@ -2,18 +2,19 @@
   hosts: all
   become: true
   tasks:
-  - name: Set DOCKER_HOST for each host
-    set_fact:
-      docker_host: "tcp://{{ ansible_host }}:2375"
+  - name: Check if Docker is installed
+    command: docker --version
+    register: docker_check
+    ignore_errors: true
+    changed_when: false
 
-  - name: Prune non-dangling images on each Docker host
+  - name: Prune Docker system
     community.docker.docker_prune:
       containers: true
       images: true
       networks: true
       volumes: true
       builder_cache: true
-    environment:
-      DOCKER_HOST: "{{ docker_host }}"
+    when: docker_check.rc == 0
     vars:
       ansible_command_timeout: 300
