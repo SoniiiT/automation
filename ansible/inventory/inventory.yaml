@@ -5,18 +5,32 @@ all:
       ansible_host: 192.168.178.6
 
     # --- LXC Hosts ---
+    lxc-bind9:
+      ansible_host: 192.178.178.3
     lxc-pterodactyl-panel:
       ansible_host: 192.168.178.40
     lxc-pterodactyl-wings:
       ansible_host: 192.168.178.41
+    lxc-harbor:
+      ansible_host: 192.168.178.42
+    lxc-paperless-ngx:
+      ansible_host: 192.168.178.43
     lxc-cloudflared:
       ansible_host: 192.168.178.44
     lxc-wireguard:
       ansible_host: 192.168.178.45
-    lxc-unifi-controller:
-      ansible_host: 192.168.178.51
+    lxc-remotely:
+      ansible_host: 192.168.178.46
+    lxc-teleport-server:
+      ansible_host: 192.168.178.47
+    lxc-teleport-proxy:
+      ansible_host: 192.168.178.48
+    lxc-twingate-connectors:
+      ansible_host: 192.168.178.49
     lxc-semaphore:
       ansible_host: 192.168.178.50
+    lxc-unifi-controller:
+      ansible_host: 192.168.178.51
     github-runner-packer:
       ansible_host: 192.168.178.72
     github-runner-terraform:
