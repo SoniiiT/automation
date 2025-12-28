@@ -1,32 +1,3 @@
-- name: Update and upgrade apt packages
-  hosts: all
-  become: true
-
-  tasks:
-    - name: Update packages with apt
-      when: ansible_pkg_mgr == 'apt'
-      ansible.builtin.apt:
-        update_cache: true
-
-    - name: Upgrade packages with apt
-      when: ansible_pkg_mgr == 'apt'
-      ansible.builtin.apt:
-        upgrade: dist
-
-    - name: Install aptitude
-      apt:
-        name: aptitude
-        state: latest
-        update_cache: true
-
-    - name: Install required system packages
-      apt:
-        pkg:
-          - ca-certificates
-          - curl
-        state: latest
-        update_cache: true
-
 - name: Install Docker
   hosts: all
   become: true
@@ -38,16 +9,90 @@
       ignore_errors: true
       changed_when: false
 
-    - name: Download Docker installation script
-      get_url:
-        url: https://get.docker.com
-        dest: /tmp/get-docker.sh
-        mode: '0755'
-      when: docker_check.rc != 0
+    # --- Debian / Ubuntu Family ---
+    - name: Install prerequisites (Debian/Ubuntu)
+      apt:
+        pkg:
+          - ca-certificates
+          - curl
+          - gnupg
+        state: present
+        update_cache: true
+      when: docker_check.rc != 0 and ansible_os_family == 'Debian'
 
-    - name: Run Docker installation script
-      command: sh /tmp/get-docker.sh
-      when: docker_check.rc != 0
+    - name: Create directory for apt keyrings (Debian/Ubuntu)
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+      when: docker_check.rc != 0 and ansible_os_family == 'Debian'
+
+    - name: Download Docker's official GPG key (Debian/Ubuntu)
+      get_url:
+        url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
+        dest: /etc/apt/keyrings/docker.asc
+        mode: 'a+r'
+      when: docker_check.rc != 0 and ansible_os_family == 'Debian'
+
+    - name: Add Docker repository to Apt sources (Debian/Ubuntu)
+      copy:
+        dest: /etc/apt/sources.list.d/docker.sources
+        content: |
+          Types: deb
+          URIs: https://download.docker.com/linux/{{ ansible_distribution | lower }}
+          Suites: {{ ansible_distribution_release }}
+          Components: stable
+          Signed-By: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+      when: docker_check.rc != 0 and ansible_os_family == 'Debian'
+
+    - name: Update apt cache (Debian/Ubuntu)
+      apt:
+        update_cache: true
+      when: docker_check.rc != 0 and ansible_os_family == 'Debian'
+
+    - name: Install Docker packages (Debian/Ubuntu)
+      apt:
+        pkg:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: latest
+      when: docker_check.rc != 0 and ansible_os_family == 'Debian'
+
+    # --- RedHat / CentOS / Fedora Family ---
+    - name: Install prerequisites (RedHat/CentOS/Fedora)
+      dnf:
+        name: dnf-plugins-core
+        state: present
+      when: docker_check.rc != 0 and ansible_os_family == 'RedHat'
+
+    - name: Add Docker repository (RedHat/CentOS/Fedora)
+      get_url:
+        url: "https://download.docker.com/linux/{{ 'rhel' if ansible_distribution == 'RedHat' else (ansible_distribution | lower) }}/docker-ce.repo"
+        dest: /etc/yum.repos.d/docker-ce.repo
+        mode: '0644'
+      when: docker_check.rc != 0 and ansible_os_family == 'RedHat'
+
+    - name: Install Docker packages (RedHat/CentOS/Fedora)
+      dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: latest
+      when: docker_check.rc != 0 and ansible_os_family == 'RedHat'
+
+    - name: Start and enable Docker service (RedHat/CentOS/Fedora)
+      systemd:
+        name: docker
+        state: started
+        enabled: true
+      when: docker_check.rc != 0 and ansible_os_family == 'RedHat'
 
     - name: Add User to Docker Group
       user:
@@ -70,6 +115,7 @@
           ExecStart=
           ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375
         mode: '0644'
+      notify: Reload Docker
 
     - name: Reload systemd daemon
       systemd:
@@ -81,3 +127,10 @@
         msg: "Rebooting to apply all updates"
         in_minutes: 5
       when: docker_check.rc != 0
+
+  handlers:
+    - name: Reload Docker
+      systemd:
+        name: docker
+        state: restarted
+        daemon_reload: true
