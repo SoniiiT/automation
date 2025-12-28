@@ -1,6 +1,6 @@
 ---
 - name: Install Portainer (Server or Agent)
-  hosts: docker
+  hosts: all
   become: true
   vars:
     # Set this to 'true' for the main server, 'false' for agent nodes (Agent only)

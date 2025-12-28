@@ -1,6 +1,6 @@
 ---
 - name: Configure Docker Log Rotation
-  hosts: docker
+  hosts: all
   become: true
 
   tasks:

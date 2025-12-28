@@ -1,5 +1,5 @@
 - name: Cleanup Docker on Docker hosts
-  hosts: docker
+  hosts: all
   become: true
   tasks:
   - name: Set DOCKER_HOST for each host

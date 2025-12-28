@@ -20,9 +20,18 @@ Dieses Verzeichnis enthält Ansible Playbooks und Inventar-Dateien zur Automatis
 
 Stelle sicher, dass Ansible installiert ist und du Zugriff auf die privaten SSH-Schlüssel hast (standardmäßig wird nach `id_rsa` gesucht).
 
-**Beispiel: System Updates ausführen**
+### ⚠️ Wichtiger Hinweis: Filter verwenden!
+Die Playbooks sind standardmäßig auf `hosts: all` konfiguriert, um in Semaphore flexibel eingesetzt werden zu können.
+**Bei lokaler Ausführung musst du zwingend `--limit` verwenden**, um nicht versehentlich alle Server anzusprechen!
+
+**Beispiel: Nur auf Docker-Servern ausführen**
 ```bash
-ansible-playbook -i inventory/inventory.yaml playbooks/system/update-upgrade.yaml
+ansible-playbook -i inventory/inventory.yaml playbooks/docker/install-docker.yaml --limit docker_servers
+```
+
+**Beispiel: Nur auf einem spezifischen Host ausführen**
+```bash
+ansible-playbook -i inventory/inventory.yaml playbooks/system/update-upgrade.yaml --limit pve-srv-01
 ```
 
 **How to install Ansible**

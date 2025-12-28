@@ -1,5 +1,5 @@
 - name: Update and upgrade apt packages
-  hosts: agent
+  hosts: all
   become: true
 
   tasks:
