@@ -15,7 +15,7 @@ all:
       ansible_host: 192.168.178.42
     lxc-paperless-ngx:
       ansible_host: 192.168.178.43
-    lxc-cloudflared:
+    lxc-cloudflared-01:
       ansible_host: 192.168.178.44
     lxc-wireguard:
       ansible_host: 192.168.178.45
@@ -43,16 +43,12 @@ all:
       ansible_host: 192.168.178.30
     docker-srv-02:
       ansible_host: 192.168.178.31
-    docker-srv-03:
-      ansible_host: 192.168.178.32
     
     # App Servers
     app-srv-01:
       ansible_host: 192.168.178.80
     app-srv-02:
       ansible_host: 192.168.178.81
-    app-srv-03:
-      ansible_host: 192.168.178.82
 
     # K3s Cluster
     # k3s-soniiit-server01:
@@ -89,7 +85,7 @@ all:
         lxc-pterodactyl-wings:
         lxc-harbor:
         lxc-paperless-ngx:
-        lxc-cloudflared:
+        lxc-cloudflared-01:
         lxc-wireguard:
         lxc-remotely:
         lxc-teleport-server:
@@ -106,10 +102,8 @@ all:
       hosts:
         app-srv-01:
         app-srv-02:
-        app-srv-03:
         docker-srv-01:
         docker-srv-02:
-        docker-srv-03:
         jellyfin-home-01:
 
     # --- Functional Groups ---
@@ -117,7 +111,6 @@ all:
       hosts:
         app-srv-01:
         app-srv-02:
-        app-srv-03:
 
     #demo_servers:
     #  hosts:
@@ -136,7 +129,7 @@ all:
         lxc-pterodactyl-wings:
         lxc-harbor:
         lxc-paperless-ngx:
-        lxc-cloudflared:
+        lxc-cloudflared-01:
         lxc-wireguard:
         lxc-remotely:
         lxc-teleport-server:
@@ -144,7 +137,6 @@ all:
         lxc-semaphore:
         docker-srv-01:
         docker-srv-02:
-        docker-srv-03:
 
     github_agents:
       hosts:
