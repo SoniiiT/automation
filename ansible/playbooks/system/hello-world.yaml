@@ -1,0 +1,12 @@
+---
+- name: Hello World Test
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Run echo command
+      ansible.builtin.command: echo "Hello World"
+      register: echo_output
+
+    - name: Show output
+      ansible.builtin.debug:
+        msg: "{{ echo_output.stdout }}"
