@@ -31,6 +31,8 @@ all:
       ansible_host: 192.168.178.50
     lxc-unifi-controller:
       ansible_host: 192.168.178.51
+    lxc-authentik:
+      ansible_host: 192.168.178.52
     github-runner-packer:
       ansible_host: 192.168.178.72
     github-runner-terraform:
@@ -93,6 +95,7 @@ all:
         lxc-twingate-connectors:
         lxc-semaphore:
         lxc-unifi-controller:
+        lxc-authentik:
         github-runner-packer:
         github-runner-terraform:
 
@@ -135,6 +138,7 @@ all:
         lxc-teleport-server:
         lxc-twingate-connectors:
         lxc-semaphore:
+        lxc-authentik:
         docker-srv-01:
         docker-srv-02:
 
