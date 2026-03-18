@@ -4,7 +4,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 from dotenv import load_dotenv
+import pyautogui
 import os
 import time
 import platform
@@ -91,14 +94,15 @@ def login_autotask():
     logging.info("Konfiguriere Chrome...")
     options = Options()
     
-    # Pflichtoptionen für Headless-Server
+    # Pflichtoptionen
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--disable-gpu')
+    options.add_argument('--disable-infobars')  # Unterdrückt das "Chrome for Testing" Banner
     
-    # Startoptionen
-    options.add_argument('--start-maximized')
-    options.add_argument('--start-fullscreen')
+    # disable-gpu und window-position nur auf Linux benötigt
+    if platform.system() == "Linux":
+        options.add_argument('--disable-gpu')
+        options.add_argument('--window-position=0,0')
     
     # Bei crontab müssen wir explizit den Display setzen (für GUI)
     if platform.system() == "Linux":
@@ -271,15 +275,17 @@ def login_autotask():
             EC.element_to_be_clickable((By.XPATH, "//div[text()='Fortfahren']"))
         )
         continue_button.click()
-        time.sleep(2)
         
         logging.info("Suche Passwortfeld...")
-        password_field = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.NAME, "Password"))
+        password_field = WebDriverWait(driver, 15).until(
+            EC.element_to_be_clickable((By.NAME, "Password"))
         )
+        driver.execute_script("arguments[0].scrollIntoView(true);", password_field)
+        time.sleep(1)
+        password_field.click()
         password_field.clear()
         password_field.send_keys(password)
-        time.sleep(2)
+        time.sleep(1)
         
         logging.info("Suche Anmelde-Button...")
         login_button = WebDriverWait(driver, 10).until(
@@ -292,6 +298,20 @@ def login_autotask():
         # Warte auf das Dashboard
         logging.info("Warte auf das Dashboard...")
         time.sleep(15)  # Längere Wartezeit für das vollständige Laden
+        
+        logging.info("Maximiere Fenster...")
+        try:
+            driver.maximize_window()
+        except Exception as e:
+            logging.warning(f"maximize_window fehlgeschlagen: {e}")
+        time.sleep(1)
+        
+        logging.info("Wechsle in Fullscreen-Modus (F11)...")
+        try:
+            pyautogui.hotkey('f11')
+        except Exception as e:
+            logging.warning(f"F11 fehlgeschlagen: {e}")
+        time.sleep(1)
         
         logging.info("Wird aktualisiert...")
         # Aktualisiere die Seite
