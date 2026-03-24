@@ -8,6 +8,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from dotenv import load_dotenv
 import pyautogui
+pyautogui.FAILSAFE = False  # Deaktiviert den Failsafe bei Mausbewegung in Ecken
 import os
 import time
 import platform
@@ -75,8 +76,11 @@ def setup_display():
 
 def login_autotask():
     wait()  # <-- Hier wird jetzt wirklich 20 Sekunden gewartet!
-    # Bestimme den Pfad zur .env-Datei
-    script_dir = os.path.dirname(os.path.realpath(__file__))
+    # Bestimme den Pfad zur .env-Datei (kompatibel mit PyInstaller .exe)
+    if getattr(sys, 'frozen', False):
+        script_dir = os.path.dirname(sys.executable)
+    else:
+        script_dir = os.path.dirname(os.path.realpath(__file__))
     env_path = os.path.join(script_dir, ".env")
     
     # Lade Umgebungsvariablen mit absolutem Pfad
@@ -97,11 +101,13 @@ def login_autotask():
     # Pflichtoptionen
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--no-first-run')
+    options.add_argument('--no-default-browser-check')
     options.add_argument('--disable-infobars')  # Unterdrückt das "Chrome for Testing" Banner
     
-    # disable-gpu und window-position nur auf Linux benötigt
+    # window-position nur auf Linux benötigt
     if platform.system() == "Linux":
-        options.add_argument('--disable-gpu')
         options.add_argument('--window-position=0,0')
     
     # Bei crontab müssen wir explizit den Display setzen (für GUI)
@@ -164,9 +170,13 @@ def login_autotask():
     cleanup_old_sessions()
 
     # Erstelle ein wirklich eindeutiges temporäres Verzeichnis
+    # Fester Pfad ohne Windows 8.3-Kurzpfad-Problem
     current_pid = os.getpid()
     unique_id = f"{current_pid}_{int(time.time())}"
-    temp_dir = os.path.join(tempfile.gettempdir(), f"chrome_profile_{unique_id}")
+    if platform.system() == "Windows":
+        temp_dir = os.path.join("C:\\Autotask\\tmp", f"chrome_profile_{unique_id}")
+    else:
+        temp_dir = os.path.join(tempfile.gettempdir(), f"chrome_profile_{unique_id}")
 
     # Stelle sicher, dass das Verzeichnis nicht existiert
     if os.path.exists(temp_dir):
@@ -246,10 +256,26 @@ def login_autotask():
                     simple_options.add_argument('--disable-dev-shm-usage')
                     driver = webdriver.Chrome(options=simple_options)
         else:
-            # Auf Windows/Mac versuchen wir, den Chromedriver direkt zu verwenden
-            # ohne WebDriverManager, um Abhängigkeiten zu reduzieren
             logging.info(f"System erkannt: {platform.system()}, starte Chrome mit Standardeinstellungen...")
-            driver = webdriver.Chrome(options=options)
+            
+            # Explizit Chrome-Pfad auf Windows setzen
+            chrome_paths = [
+                r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+                r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+                os.path.join(os.environ.get("LOCALAPPDATA", ""), r"Google\Chrome\Application\chrome.exe"),
+            ]
+            for path in chrome_paths:
+                if os.path.exists(path):
+                    logging.info(f"Chrome gefunden unter: {path}")
+                    options.binary_location = path
+                    break
+            else:
+                logging.warning("Chrome nicht unter Standardpfaden gefunden, versuche ohne expliziten Pfad")
+
+            # ChromeDriver mit verbose Logging starten
+            log_path = os.path.join(log_dir, "chromedriver.log")
+            service = Service(log_output=log_path)
+            driver = webdriver.Chrome(service=service, options=options)
         
         logging.info("Chrome gestartet, öffne Autotask...")
         driver.get("https://ww18.autotask.net")
