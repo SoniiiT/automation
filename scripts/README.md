@@ -20,5 +20,10 @@ Skripte zur Verwaltung von Spiele/-Servern.
 ### 💻 Setup (`scripts/setup/`)
 Generelle Skripte für verschiedene Systeme (Windows, Linux, macOS). Enthält Bootstrap-Skripte zum schnellen Einrichten neuer Maschinen sowie systembezogene Hilfsskripte (z. B. Festplatten auslesen).
 
+Windows-Skripte sind zusätzlich nach Shell und Zweck gruppiert:
+- `scripts/setup/windows/powershell/docker/`
+- `scripts/setup/windows/powershell/system/`
+- `scripts/setup/windows/powershell/autopilot/`
+
 ### 🧰 Utils (`scripts/utils/`)
 Verschiedene Werkzeuge für spezifische Aufgaben.
