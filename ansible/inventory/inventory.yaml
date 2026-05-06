@@ -21,6 +21,10 @@ all:
       ansible_host: 192.168.178.48
     lxc-semaphore:
       ansible_host: 192.168.178.50
+    lxc-omada:
+      ansible_host: 192.168.178.51
+    lxc-scanopy:
+      ansible_host: 192.168.178.52
     github-runner-packer:
       ansible_host: 192.168.178.72
     github-runner-terraform:
@@ -78,6 +82,8 @@ all:
         lxc-remotely:
         lxc-teleport-proxy:
         lxc-semaphore:
+        lxc-omada:
+        lxc-scanopy:
         github-runner-packer:
         github-runner-terraform:
 
