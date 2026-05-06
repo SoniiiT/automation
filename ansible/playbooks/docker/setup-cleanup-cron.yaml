@@ -1,6 +1,6 @@
 ---
 - name: Setup Docker Maintenance Cronjobs
-  hosts: all
+  hosts: docker_servers
   become: true
 
   tasks:

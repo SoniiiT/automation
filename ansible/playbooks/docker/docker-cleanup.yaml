@@ -1,20 +1,9 @@
 - name: Cleanup Docker on Docker hosts
-  hosts: all
+  hosts: docker_servers
   become: true
   tasks:
-  - name: Check if Docker is installed
-    command: docker --version
-    register: docker_check
-    ignore_errors: true
-    changed_when: false
-
   - name: Prune Docker system
-    community.docker.docker_prune:
-      containers: true
-      images: true
-      networks: true
-      volumes: true
-      builder_cache: true
-    when: docker_check.rc == 0
+    shell: docker system prune -af
+    changed_when: false
     vars:
       ansible_command_timeout: 300

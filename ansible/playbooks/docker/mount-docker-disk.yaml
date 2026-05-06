@@ -1,6 +1,6 @@
 ---
 - name: Mount Docker Data Disk
-  hosts: all
+  hosts: docker_servers
   become: true
   vars:
     # Default device path, change this if your second disk is different (e.g., /dev/vdb, /dev/nvme0n1)
