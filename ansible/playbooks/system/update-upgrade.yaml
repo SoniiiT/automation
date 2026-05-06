@@ -3,12 +3,77 @@
   become: true
 
   tasks:
-  - name: Update packages with apt
-    when: ansible_pkg_mgr == 'apt'
-    ansible.builtin.apt:
-      update_cache: true
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+      when: ansible_pkg_mgr == 'apt'
 
-  - name: Upgrade packages with apt
-    when: ansible_pkg_mgr == 'apt'
-    ansible.builtin.apt:
-      upgrade: dist
+    - name: Count upgradable packages
+      ansible.builtin.shell:
+        cmd: apt-get -s upgrade 2>/dev/null | grep '^Inst' | wc -l
+        executable: /bin/bash
+      changed_when: false
+      register: upgradable_count
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: Get upgradable package names
+      ansible.builtin.shell:
+        cmd: apt-get -s upgrade 2>/dev/null | grep '^Inst' | awk '{print $2}' | paste -sd ','
+        executable: /bin/bash
+      changed_when: false
+      register: upgradable_packages
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: Save pending updates to temp file
+      ansible.builtin.copy:
+        content: |
+          host={{ inventory_hostname }}
+          count={{ upgradable_count.stdout | trim }}
+          packages={{ upgradable_packages.stdout | trim }}
+        dest: /tmp/ansible_pending_updates.txt
+        mode: '0644'
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: Set update facts
+      ansible.builtin.set_fact:
+        packages_pending: "{{ upgradable_count.stdout | trim | int }}"
+        packages_list: "{{ upgradable_packages.stdout | trim }}"
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: Upgrade packages with apt
+      ansible.builtin.apt:
+        upgrade: dist
+      when: ansible_pkg_mgr == 'apt'
+
+- name: Send Pushover update summary
+  hosts: localhost
+  gather_facts: false
+  # Required Semaphore Extra Variables:
+  #   pushover_token  - Pushover application token
+  #   pushover_user   - Pushover user key
+
+  tasks:
+    - name: Build summary message
+      ansible.builtin.set_fact:
+        pushover_summary: |
+          {% for host in groups['all'] %}
+          {% if hostvars[host].packages_pending is defined %}
+          {% if hostvars[host].packages_pending | int > 0 %}
+          🔄 {{ host }}: {{ hostvars[host].packages_pending }} pkg(s) updated
+          {% else %}
+          ✅ {{ host }}: up to date
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+
+    - name: Send Pushover notification
+      ansible.builtin.uri:
+        url: "https://api.pushover.net/1/messages.json"
+        method: POST
+        body_format: form-urlencoded
+        body:
+          token: "{{ pushover_token }}"
+          user: "{{ pushover_user }}"
+          title: "🖥️ System Update Complete"
+          message: "{{ pushover_summary | trim | truncate(1024, false, '...') }}"
+        status_code: 200
