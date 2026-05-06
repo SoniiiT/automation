@@ -13,26 +13,14 @@ all:
       ansible_host: 192.168.178.41
     lxc-harbor:
       ansible_host: 192.168.178.42
-    lxc-paperless-ngx:
-      ansible_host: 192.168.178.43
-    lxc-cloudflared-01:
-      ansible_host: 192.168.178.44
     lxc-wireguard:
       ansible_host: 192.168.178.45
     lxc-remotely:
       ansible_host: 192.168.178.46
-    lxc-teleport-server:
-      ansible_host: 192.168.178.47
     lxc-teleport-proxy:
       ansible_host: 192.168.178.48
-    lxc-twingate-connectors:
-      ansible_host: 192.168.178.49
     lxc-semaphore:
       ansible_host: 192.168.178.50
-    lxc-unifi-controller:
-      ansible_host: 192.168.178.51
-    lxc-authentik:
-      ansible_host: 192.168.178.52
     github-runner-packer:
       ansible_host: 192.168.178.72
     github-runner-terraform:
@@ -46,15 +34,11 @@ all:
     docker-srv-02:
       ansible_host: 192.168.178.31
     
-    # Development Servers
-    dev-srv-01:
-      ansible_host: 192.168.178.60
-    
     # App Servers
+    ai-srv-01:
+      ansible_host: 192.168.178.90
     app-srv-01:
-      ansible_host: 192.168.178.80
-    app-srv-02:
-      ansible_host: 192.168.178.81
+      ansible_host: 192.168.178.91
 
     # K3s Cluster
     # k3s-soniiit-server01:
@@ -90,16 +74,10 @@ all:
         lxc-pterodactyl-panel:
         lxc-pterodactyl-wings:
         lxc-harbor:
-        lxc-paperless-ngx:
-        lxc-cloudflared-01:
         lxc-wireguard:
         lxc-remotely:
-        lxc-teleport-server:
         lxc-teleport-proxy:
-        lxc-twingate-connectors:
         lxc-semaphore:
-        lxc-unifi-controller:
-        lxc-authentik:
         github-runner-packer:
         github-runner-terraform:
 
@@ -107,27 +85,22 @@ all:
       vars:
         ansible_user: soniiit
       hosts:
+        ai-srv-01:
         app-srv-01:
-        app-srv-02:
         docker-srv-01:
         docker-srv-02:
-        dev-srv-01:
         jellyfin-home-01:
 
     # --- Functional Groups ---
     application_servers:
       hosts:
+        ai-srv-01:
         app-srv-01:
-        app-srv-02:
 
     #demo_servers:
     #  hosts:
     #    srv-demo-01:
     #    srv-demo-02:
-
-    development_servers:
-      hosts:
-        dev-srv-01:
 
     docker_servers:
       hosts:
@@ -135,17 +108,11 @@ all:
         lxc-pterodactyl-panel:
         lxc-pterodactyl-wings:
         lxc-harbor:
-        lxc-paperless-ngx:
-        lxc-cloudflared-01:
         lxc-wireguard:
         lxc-remotely:
-        lxc-teleport-server:
-        lxc-twingate-connectors:
         lxc-semaphore:
-        lxc-authentik:
         docker-srv-01:
         docker-srv-02:
-        dev-srv-01:
 
     github_agents:
       hosts:
