@@ -79,6 +79,10 @@
           🏠 Sonstiges
           {% for h in groups['vm_hosts'] | default([]) | reject('in', (groups['docker_servers'] | default([])) + (groups['application_servers'] | default([]))) | list %}{{ host_line(h) }}
           {% endfor %}
+        _physical: |
+          🍓 Physical
+          {% for h in groups['physical_hosts'] | default([]) %}{{ host_line(h) }}
+          {% endfor %}
       ansible.builtin.uri:
         url: "https://api.pushover.net/1/messages.json"
         method: POST
@@ -87,5 +91,5 @@
           token: "{{ pushover_token }}"
           user: "{{ pushover_user }}"
           title: "✅ Update-Report: {{ _date }}"
-          message: "{{ (_proxmox + _docker + _app + _lxc + _runners + _other) | trim | truncate(1024, false, '...') }}"
+          message: "{{ (_proxmox + _docker + _app + _lxc + _runners + _other + _physical) | trim | truncate(1024, false, '...') }}"
         status_code: 200
