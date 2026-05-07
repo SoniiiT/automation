@@ -57,60 +57,66 @@
         _pushover_date: "{{ lookup('pipe', 'date +\"%A, %-d. %B %Y\"') }}"
         _pushover_msg: |
           🖥️ Proxmox
-          {% for h in groups['proxmox_servers'] | default([]) -%}
-          {% if hostvars[h].packages_pending is defined -%}
+          {% for h in groups['proxmox_servers'] | default([]) %}
+          {% if hostvars[h].packages_pending is defined %}
           {% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert
           {% else %}✅ {{ h }}: Alles aktuell
-          {% endif -%}
-          {% endif -%}
+          {% endif %}
+          {% endif %}
           {% endfor %}
+
           🐳 Docker
-          {% for h in groups['docker_servers'] | default([]) | reject('in', groups['lxc_hosts'] | default([])) | list -%}
-          {% if hostvars[h].packages_pending is defined -%}
+          {% for h in groups['docker_servers'] | default([]) | reject('in', groups['lxc_hosts'] | default([])) | list %}
+          {% if hostvars[h].packages_pending is defined %}
           {% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert
           {% else %}✅ {{ h }}: Alles aktuell
-          {% endif -%}
-          {% endif -%}
+          {% endif %}
+          {% endif %}
           {% endfor %}
+
           💻 App / AI
-          {% for h in groups['application_servers'] | default([]) -%}
-          {% if hostvars[h].packages_pending is defined -%}
+          {% for h in groups['application_servers'] | default([]) %}
+          {% if hostvars[h].packages_pending is defined %}
           {% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert
           {% else %}✅ {{ h }}: Alles aktuell
-          {% endif -%}
-          {% endif -%}
+          {% endif %}
+          {% endif %}
           {% endfor %}
+
           📦 LXC
-          {% for h in groups['lxc_hosts'] | default([]) | reject('in', groups['github_agents'] | default([])) | list -%}
-          {% if hostvars[h].packages_pending is defined -%}
+          {% for h in groups['lxc_hosts'] | default([]) | reject('in', groups['github_agents'] | default([])) | list %}
+          {% if hostvars[h].packages_pending is defined %}
           {% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert
           {% else %}✅ {{ h }}: Alles aktuell
-          {% endif -%}
-          {% endif -%}
+          {% endif %}
+          {% endif %}
           {% endfor %}
+
           🏃 GitHub Runners
-          {% for h in groups['github_agents'] | default([]) -%}
-          {% if hostvars[h].packages_pending is defined -%}
+          {% for h in groups['github_agents'] | default([]) %}
+          {% if hostvars[h].packages_pending is defined %}
           {% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert
           {% else %}✅ {{ h }}: Alles aktuell
-          {% endif -%}
-          {% endif -%}
+          {% endif %}
+          {% endif %}
           {% endfor %}
+
           🏠 Sonstiges
-          {% for h in groups['vm_hosts'] | default([]) | reject('in', (groups['docker_servers'] | default([])) + (groups['application_servers'] | default([]))) | list -%}
-          {% if hostvars[h].packages_pending is defined -%}
+          {% for h in groups['vm_hosts'] | default([]) | reject('in', (groups['docker_servers'] | default([])) + (groups['application_servers'] | default([]))) | list %}
+          {% if hostvars[h].packages_pending is defined %}
           {% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert
           {% else %}✅ {{ h }}: Alles aktuell
-          {% endif -%}
-          {% endif -%}
+          {% endif %}
+          {% endif %}
           {% endfor %}
+
           🍓 Physical
-          {% for h in groups['physical_hosts'] | default([]) -%}
-          {% if hostvars[h].packages_pending is defined -%}
+          {% for h in groups['physical_hosts'] | default([]) %}
+          {% if hostvars[h].packages_pending is defined %}
           {% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert
           {% else %}✅ {{ h }}: Alles aktuell
-          {% endif -%}
-          {% endif -%}
+          {% endif %}
+          {% endif %}
           {% endfor %}
 
     - name: Send Pushover update summary
