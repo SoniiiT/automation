@@ -101,7 +101,6 @@ all:
         docker-srv-02:
         docker-srv-03:
         jellyfin-home-01:
-        rpi01:
 
     # --- Functional Groups ---
     application_servers:
