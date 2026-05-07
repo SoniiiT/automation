@@ -63,6 +63,8 @@ all:
     # Home Servers
     jellyfin-home-01:
       ansible_host: 192.168.178.98
+    rpi01:
+      ansible_host: 192.168.178.4
 
   children:
     # --- Infrastructure Groups ---
@@ -99,6 +101,7 @@ all:
         docker-srv-02:
         docker-srv-03:
         jellyfin-home-01:
+        rpi01:
 
     # --- Functional Groups ---
     application_servers:
