@@ -10,6 +10,7 @@
       ansible.builtin.apt:
         update_cache: true
       when: ansible_facts['pkg_mgr'] == 'apt'
+      ignore_errors: true
 
     - name: Count upgradable packages
       ansible.builtin.shell:
@@ -48,41 +49,74 @@
         upgrade: dist
       when: ansible_facts['pkg_mgr'] == 'apt'
 
+    - name: Build Pushover message
+      run_once: true
+      delegate_to: localhost
+      become: false
+      ansible.builtin.set_fact:
+        _pushover_date: "{{ lookup('pipe', 'date +\"%A, %-d. %B %Y\"') }}"
+        _pushover_msg: |
+          🖥️ Proxmox
+          {% for h in groups['proxmox_servers'] | default([]) -%}
+          {% if hostvars[h].packages_pending is defined -%}
+          {% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert
+          {% else %}✅ {{ h }}: Alles aktuell
+          {% endif -%}
+          {% endif -%}
+          {% endfor %}
+          🐳 Docker
+          {% for h in groups['docker_servers'] | default([]) | reject('in', groups['lxc_hosts'] | default([])) | list -%}
+          {% if hostvars[h].packages_pending is defined -%}
+          {% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert
+          {% else %}✅ {{ h }}: Alles aktuell
+          {% endif -%}
+          {% endif -%}
+          {% endfor %}
+          💻 App / AI
+          {% for h in groups['application_servers'] | default([]) -%}
+          {% if hostvars[h].packages_pending is defined -%}
+          {% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert
+          {% else %}✅ {{ h }}: Alles aktuell
+          {% endif -%}
+          {% endif -%}
+          {% endfor %}
+          📦 LXC
+          {% for h in groups['lxc_hosts'] | default([]) | reject('in', groups['github_agents'] | default([])) | list -%}
+          {% if hostvars[h].packages_pending is defined -%}
+          {% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert
+          {% else %}✅ {{ h }}: Alles aktuell
+          {% endif -%}
+          {% endif -%}
+          {% endfor %}
+          🏃 GitHub Runners
+          {% for h in groups['github_agents'] | default([]) -%}
+          {% if hostvars[h].packages_pending is defined -%}
+          {% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert
+          {% else %}✅ {{ h }}: Alles aktuell
+          {% endif -%}
+          {% endif -%}
+          {% endfor %}
+          🏠 Sonstiges
+          {% for h in groups['vm_hosts'] | default([]) | reject('in', (groups['docker_servers'] | default([])) + (groups['application_servers'] | default([]))) | list -%}
+          {% if hostvars[h].packages_pending is defined -%}
+          {% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert
+          {% else %}✅ {{ h }}: Alles aktuell
+          {% endif -%}
+          {% endif -%}
+          {% endfor %}
+          🍓 Physical
+          {% for h in groups['physical_hosts'] | default([]) -%}
+          {% if hostvars[h].packages_pending is defined -%}
+          {% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert
+          {% else %}✅ {{ h }}: Alles aktuell
+          {% endif -%}
+          {% endif -%}
+          {% endfor %}
+
     - name: Send Pushover update summary
       run_once: true
       delegate_to: localhost
       become: false
-      vars:
-        _date: "{{ lookup('pipe', 'date +\"%A, %-d. %B %Y\"') }}"
-        _line: "{% macro host_line(h) %}{% if hostvars[h].packages_pending is defined %}{% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert{% else %}✅ {{ h }}: Alles aktuell{% endif %}{% endif %}{% endmacro %}"
-        _proxmox: |
-          🖥️ Proxmox
-          {% for h in groups['proxmox_servers'] | default([]) %}{{ host_line(h) }}
-          {% endfor %}
-        _docker: |
-          🐳 Docker
-          {% for h in groups['docker_servers'] | default([]) | reject('in', groups['lxc_hosts'] | default([])) | list %}{{ host_line(h) }}
-          {% endfor %}
-        _app: |
-          💻 App / AI
-          {% for h in groups['application_servers'] | default([]) %}{{ host_line(h) }}
-          {% endfor %}
-        _lxc: |
-          📦 LXC
-          {% for h in groups['lxc_hosts'] | default([]) | reject('in', groups['github_agents'] | default([])) | list %}{{ host_line(h) }}
-          {% endfor %}
-        _runners: |
-          🏃 GitHub Runners
-          {% for h in groups['github_agents'] | default([]) %}{{ host_line(h) }}
-          {% endfor %}
-        _other: |
-          🏠 Sonstiges
-          {% for h in groups['vm_hosts'] | default([]) | reject('in', (groups['docker_servers'] | default([])) + (groups['application_servers'] | default([]))) | list %}{{ host_line(h) }}
-          {% endfor %}
-        _physical: |
-          🍓 Physical
-          {% for h in groups['physical_hosts'] | default([]) %}{{ host_line(h) }}
-          {% endfor %}
       ansible.builtin.uri:
         url: "https://api.pushover.net/1/messages.json"
         method: POST
@@ -90,6 +124,6 @@
         body:
           token: "{{ pushover_token }}"
           user: "{{ pushover_user }}"
-          title: "✅ Update-Report: {{ _date }}"
-          message: "{{ (_proxmox + _docker + _app + _lxc + _runners + _other + _physical) | trim | truncate(1024, false, '...') }}"
+          title: "✅ Update-Report: {{ _pushover_date }}"
+          message: "{{ _pushover_msg | trim | truncate(1024, false, '...') }}"
         status_code: 200
