@@ -52,6 +52,33 @@
       run_once: true
       delegate_to: localhost
       become: false
+      vars:
+        _date: "{{ lookup('pipe', 'date +\"%A, %-d. %B %Y\"') }}"
+        _line: "{% macro host_line(h) %}{% if hostvars[h].packages_pending is defined %}{% if hostvars[h].packages_pending | int > 0 %}✅ {{ h }}: {{ hostvars[h].packages_pending }} Pakete aktualisiert{% else %}✅ {{ h }}: Alles aktuell{% endif %}{% endif %}{% endmacro %}"
+        _proxmox: |
+          🖥️ Proxmox
+          {% for h in groups['proxmox_servers'] | default([]) %}{{ host_line(h) }}
+          {% endfor %}
+        _docker: |
+          🐳 Docker
+          {% for h in groups['docker_servers'] | default([]) | reject('in', groups['lxc_hosts'] | default([])) | list %}{{ host_line(h) }}
+          {% endfor %}
+        _app: |
+          💻 App / AI
+          {% for h in groups['application_servers'] | default([]) %}{{ host_line(h) }}
+          {% endfor %}
+        _lxc: |
+          📦 LXC
+          {% for h in groups['lxc_hosts'] | default([]) | reject('in', groups['github_agents'] | default([])) | list %}{{ host_line(h) }}
+          {% endfor %}
+        _runners: |
+          🏃 GitHub Runners
+          {% for h in groups['github_agents'] | default([]) %}{{ host_line(h) }}
+          {% endfor %}
+        _other: |
+          🏠 Sonstiges
+          {% for h in groups['vm_hosts'] | default([]) | reject('in', (groups['docker_servers'] | default([])) + (groups['application_servers'] | default([]))) | list %}{{ host_line(h) }}
+          {% endfor %}
       ansible.builtin.uri:
         url: "https://api.pushover.net/1/messages.json"
         method: POST
@@ -59,15 +86,6 @@
         body:
           token: "{{ pushover_token }}"
           user: "{{ pushover_user }}"
-          title: "🖥️ System Update Complete"
-          message: >-
-            {% for host in groups['all'] %}
-            {% if hostvars[host].packages_pending is defined %}
-            {% if hostvars[host].packages_pending | int > 0 %}
-            🔄 {{ host }}: {{ hostvars[host].packages_pending }} pkg(s) updated
-            {% else %}
-            ✅ {{ host }}: up to date
-            {% endif %}
-            {% endif %}
-            {% endfor %}
+          title: "✅ Update-Report: {{ _date }}"
+          message: "{{ (_proxmox + _docker + _app + _lxc + _runners + _other) | trim | truncate(1024, false, '...') }}"
         status_code: 200
