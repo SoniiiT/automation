@@ -38,8 +38,114 @@ def wait():
     logging.info("Starte Wartezeit von 20 Sekunden vor Ausführung...")
     time.sleep(20)
 
+
+def _env_bool(name, default=False):
+    """Liest boolesche Umgebungsvariablen robust ein (1/true/yes/on)."""
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on", "y", "ja"}
+
+
+def normalize_browser_viewport(driver):
+    """Stellt sicher, dass der Browser sichtbar/maximiert ist und Zoom auf 100% steht."""
+    try:
+        driver.set_window_position(0, 0)
+    except Exception as e:
+        logging.debug(f"set_window_position übersprungen: {e}")
+
+    try:
+        driver.maximize_window()
+    except Exception as e:
+        logging.warning(f"maximize_window fehlgeschlagen: {e}")
+
+    # Zoom auf 100% zurücksetzen, falls die Seite skaliert wurde.
+    try:
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys("0").key_up(Keys.CONTROL).perform()
+    except Exception as e:
+        logging.debug(f"Zoom-Reset per Tastenkürzel fehlgeschlagen: {e}")
+
+    try:
+        driver.execute_script("document.body.style.zoom='100%';")
+    except Exception as e:
+        logging.debug(f"Zoom-Reset per JavaScript fehlgeschlagen: {e}")
+
+    try:
+        driver.execute_cdp_cmd("Emulation.setPageScaleFactor", {"pageScaleFactor": 1})
+    except Exception as e:
+        logging.debug(f"CDP PageScaleFactor konnte nicht gesetzt werden: {e}")
+
+
+def ensure_autotask_window_state(driver):
+    """Sorgt dafür, dass der aktive Tab/Window wirklich Autotask zeigt und voll sichtbar ist."""
+    try:
+        handles = driver.window_handles
+        autotask_handles = []
+
+        for handle in handles:
+            driver.switch_to.window(handle)
+            url = (driver.current_url or "").lower()
+            if "autotask.net" in url:
+                autotask_handles.append(handle)
+
+        autotask_handle = autotask_handles[-1] if autotask_handles else None
+
+        if autotask_handle:
+            driver.switch_to.window(autotask_handle)
+        elif handles:
+            driver.switch_to.window(handles[-1])
+
+        # Leere/Neue Tabs schließen, damit keine falsche Seite im Fokus bleibt.
+        for handle in list(driver.window_handles):
+            try:
+                driver.switch_to.window(handle)
+                current_url = (driver.current_url or "").lower()
+                if current_url.startswith("chrome://newtab") or current_url in {"about:blank", "chrome://new-tab-page/"}:
+                    if len(driver.window_handles) > 1:
+                        driver.close()
+            except Exception:
+                continue
+
+        # Zurück auf den bevorzugten Autotask-Tab, falls vorhanden.
+        remaining_handles = driver.window_handles
+        if autotask_handle and autotask_handle in remaining_handles:
+            driver.switch_to.window(autotask_handle)
+        elif remaining_handles:
+            driver.switch_to.window(remaining_handles[-1])
+
+        # Explizite Fenstergröße verhindert seltene Minimierungs-/Viewport-Fehler unter Windows.
+        try:
+            screen = pyautogui.size()
+            width = int(screen.width)
+            height = int(screen.height)
+            driver.set_window_rect(x=0, y=0, width=width, height=height)
+        except Exception as e:
+            logging.debug(f"set_window_rect übersprungen: {e}")
+
+        normalize_browser_viewport(driver)
+        logging.info(f"Aktive URL nach Fensterkorrektur: {driver.current_url}")
+    except Exception as e:
+        logging.warning(f"Fenster-/Tab-Korrektur fehlgeschlagen: {e}")
+
+
+def stabilize_presentation_mode(driver):
+    """Stabilisiert den Präsentationsmodus nach dem Umschalten bzw. nach einem Reload."""
+    try:
+        time.sleep(3)
+        ensure_autotask_window_state(driver)
+        time.sleep(1)
+        driver.switch_to.default_content()
+        logging.info(f"Präsentationsmodus stabilisiert. Aktive URL: {driver.current_url}")
+    except Exception as e:
+        logging.warning(f"Präsentationsmodus konnte nicht stabilisiert werden: {e}")
+
 # Diese Funktion prüft, ob ein X-Server läuft und stellt sicher, dass wir Zugriff haben
 def setup_display():
+    # Auf Windows gibt es kein X11-Setup; frühzeitig beenden.
+    if platform.system() != "Linux":
+        logging.info("X-Display-Setup wird auf diesem System übersprungen.")
+        return
+
     try:
         # Versuche, den ersten verfügbaren X-Display zu finden
         displays = []
@@ -74,6 +180,134 @@ def setup_display():
     except Exception as e:
         logging.error(f"Fehler beim Einrichten des Displays: {e}")
 
+
+def _safe_click(driver, locator, timeout=8):
+    """Klickt robust per normalem Klick und JavaScript-Fallback."""
+    element = WebDriverWait(driver, timeout).until(EC.element_to_be_clickable(locator))
+    try:
+        element.click()
+    except Exception:
+        driver.execute_script("arguments[0].click();", element)
+    return element
+
+
+def _click_first_match(driver, locators, step_name):
+    """Probiert mehrere Locator-Varianten und klickt den ersten Treffer."""
+    last_error = None
+    for locator in locators:
+        try:
+            _safe_click(driver, locator, timeout=5)
+            logging.info(f"{step_name}: Klick erfolgreich mit Locator {locator}")
+            return True
+        except Exception as e:
+            last_error = e
+    if last_error:
+        raise last_error
+    return False
+
+
+def _dismiss_blocking_overlay(driver):
+    """Schließt blockierende Overlays (z. B. KaseyaOne-App-Launcher), falls vorhanden."""
+    try:
+        overlay = driver.find_elements(By.CSS_SELECTOR, "div.fixed.z-overlay")
+        if not overlay:
+            return
+
+        close_candidates = driver.find_elements(
+            By.XPATH,
+            "//div[contains(@class,'z-overlay')]//button[normalize-space()=''] | "
+            "//div[contains(@class,'z-overlay')]//*[@aria-label='Close' or @aria-label='Schließen']"
+        )
+
+        if close_candidates:
+            try:
+                close_candidates[0].click()
+            except Exception:
+                driver.execute_script("arguments[0].click();", close_candidates[0])
+            logging.info("Blockierendes Overlay wurde geschlossen.")
+            time.sleep(1)
+    except Exception as e:
+        logging.debug(f"Overlay-Prüfung übersprungen: {e}")
+
+
+def _switch_to_frame_with_text(driver, text, timeout=10):
+    """Wechselt in das iFrame, das den gesuchten Text enthält."""
+    end_time = time.time() + timeout
+
+    while time.time() < end_time:
+        driver.switch_to.default_content()
+
+        # Falls der Text im Hauptdokument steht, kein Frame-Wechsel nötig
+        if text in driver.page_source:
+            return True
+
+        frames = driver.find_elements(By.TAG_NAME, "iframe")
+        for frame in frames:
+            try:
+                driver.switch_to.default_content()
+                driver.switch_to.frame(frame)
+                if text in driver.page_source:
+                    return True
+            except Exception:
+                continue
+
+        time.sleep(0.3)
+
+    driver.switch_to.default_content()
+    return False
+
+
+def enter_presentation_mode(driver):
+    """
+    Öffnet den Präsentationsmodus über das UI:
+    1) 3-Punkte-Menü öffnen
+    2) Präsentationsmodus wählen
+    3) Option 'Nichts ... wechseln' auswählen
+    4) 'Präsentationsmodus starten' klicken
+    """
+    logging.info("Starte Wechsel in den Präsentationsmodus über das Menü...")
+
+    _dismiss_blocking_overlay(driver)
+
+    # 1) Dashboard-3-Punkte-Menü öffnen (nicht das Benutzer-Menü oben rechts)
+    menu_button_locators = [
+        (By.XPATH, "//main//button[contains(normalize-space(.),'')]"),
+        (By.XPATH, "//main//button[contains(@class,'c-button--icon-only') and @data-onyx-external-id]"),
+        (By.XPATH, "//button[contains(normalize-space(.),'')]")
+    ]
+    _click_first_match(driver, menu_button_locators, "3-Punkte-Menü")
+
+    # 2) Eintrag 'Präsentationsmodus' im Dropdown klicken
+    presentation_entry_locators = [
+        (By.XPATH, "//*[self::option or @role='option' or @role='menuitem'][contains(normalize-space(.),'Präsentationsmodus')]") ,
+        (By.XPATH, "//*[contains(normalize-space(.),'Präsentationsmodus') and not(contains(normalize-space(.),'starten'))]"),
+    ]
+    _click_first_match(driver, presentation_entry_locators, "Menüeintrag Präsentationsmodus")
+
+    # Dialog erscheint in einem iFrame
+    if not _switch_to_frame_with_text(driver, "Einstellungen für Präsentationsmodus", timeout=10):
+        raise RuntimeError("Dialog 'Einstellungen für Präsentationsmodus' wurde nicht gefunden.")
+
+    # 3) In Dialog Option 'Nichts (...)' wählen
+    nothing_option_locators = [
+        (By.XPATH, "//span[contains(@class,'PrimaryText') and contains(normalize-space(.),'Nichts (weder Filterwert auf Registerkartenebene noch Registerkarte wechseln)')]"),
+        (By.XPATH, "//*[contains(normalize-space(.),'Nichts (weder Filterwert auf Registerkartenebene noch Registerkarte wechseln)')]"),
+        (By.XPATH, "//*[contains(normalize-space(.),'Nichts (weder')]")
+    ]
+    _click_first_match(driver, nothing_option_locators, "Option 'Nichts'")
+
+    # 4) Präsentationsmodus starten
+    start_button_locators = [
+        (By.XPATH, "//div[contains(@class,'Button2') and contains(normalize-space(.),'Präsentationsmodus starten')]") ,
+        (By.XPATH, "//*[contains(normalize-space(.),'Präsentationsmodus starten')]")
+    ]
+    _click_first_match(driver, start_button_locators, "Button 'Präsentationsmodus starten'")
+
+    # Kurze Stabilisierung nach Moduswechsel
+    time.sleep(2)
+    driver.switch_to.default_content()
+    logging.info("Präsentationsmodus wurde gestartet.")
+
 def login_autotask():
     wait()  # <-- Hier wird jetzt wirklich 20 Sekunden gewartet!
     # Bestimme den Pfad zur .env-Datei (kompatibel mit PyInstaller .exe)
@@ -89,6 +323,7 @@ def login_autotask():
     
     username = os.getenv('AUTOTASK_USERNAME')
     password = os.getenv('AUTOTASK_PASSWORD')
+    enable_presentation_mode = _env_bool('AUTOTASK_ENABLE_PRESENTATION_MODE', default=False)
     
     if not username or not password:
         logging.error("Benutzername oder Passwort fehlen in der .env-Datei!")
@@ -105,6 +340,17 @@ def login_autotask():
     options.add_argument('--no-first-run')
     options.add_argument('--no-default-browser-check')
     options.add_argument('--disable-infobars')  # Unterdrückt das "Chrome for Testing" Banner
+    options.add_argument('--start-maximized')
+    options.add_argument('--new-window')
+
+    if platform.system() == "Windows":
+        # Verhindert bekannte Render-/Kompositionsprobleme mit Chrome auf Windows/Intel-GPUs.
+        options.add_argument('--disable-direct-composition')
+        options.add_argument('--disable-backgrounding-occluded-windows')
+        options.add_argument('--disable-renderer-backgrounding')
+        options.add_argument('--force-device-scale-factor=1')
+        options.add_argument('--high-dpi-support=1')
+        options.add_argument('--disable-features=CalculateNativeWinOcclusion')
     
     # window-position nur auf Linux benötigt
     if platform.system() == "Linux":
@@ -325,28 +571,35 @@ def login_autotask():
         logging.info("Warte auf das Dashboard...")
         time.sleep(15)  # Längere Wartezeit für das vollständige Laden
         
-        logging.info("Maximiere Fenster...")
-        try:
-            driver.maximize_window()
-        except Exception as e:
-            logging.warning(f"maximize_window fehlgeschlagen: {e}")
+        logging.info("Normalisiere Browser-Ansicht...")
+        ensure_autotask_window_state(driver)
         time.sleep(1)
-        
-        logging.info("Wechsle in Fullscreen-Modus (F11)...")
-        try:
-            pyautogui.hotkey('f11')
-        except Exception as e:
-            logging.warning(f"F11 fehlgeschlagen: {e}")
-        time.sleep(1)
+
+        if enable_presentation_mode:
+            try:
+                enter_presentation_mode(driver)
+                stabilize_presentation_mode(driver)
+            except Exception as e:
+                logging.warning(f"Präsentationsmodus über UI fehlgeschlagen: {e}")
+                logging.warning("Präsentationsmodus wird übersprungen, normale Dashboard-Ansicht bleibt aktiv.")
+        else:
+            logging.info("Präsentationsmodus ist deaktiviert (AUTOTASK_ENABLE_PRESENTATION_MODE=false).")
         
         logging.info("Wird aktualisiert...")
-        # Aktualisiere die Seite
-        driver.refresh()
+        if enable_presentation_mode:
+            logging.info("Initialer Refresh wird im Präsentationsmodus übersprungen, um die Ansicht stabil zu halten.")
+        else:
+            # Aktualisiere die Seite
+            driver.refresh()
+            ensure_autotask_window_state(driver)
         # Aktualisiere die Seite alle 2 Minuten (wie F5)
         while True:
             time.sleep(120)  # 2 Minuten warten
             logging.info("Aktualisiere die Seite (F5)...")
             driver.refresh()
+            ensure_autotask_window_state(driver)
+            if enable_presentation_mode:
+                stabilize_presentation_mode(driver)
         
     except Exception as e:
         logging.error(f"Ein Fehler ist aufgetreten: {e}")
