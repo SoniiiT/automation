@@ -1,0 +1,57 @@
+---
+- name: Semaphore Connection & Environment Test
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: "[1] SSH-Verbindung - Ping"
+      ansible.builtin.ping:
+
+    - name: "[2] Hostname ausgeben"
+      ansible.builtin.debug:
+        msg: "Host: {{ inventory_hostname }} | IP: {{ ansible_host | default('N/A') }}"
+
+    - name: "[3] OS-Informationen"
+      ansible.builtin.debug:
+        msg: "OS: {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }} | Kernel: {{ ansible_facts['kernel'] }}"
+
+    - name: "[4] Aktueller Benutzer"
+      ansible.builtin.command: whoami
+      register: whoami_output
+      changed_when: false
+
+    - name: "[4] Benutzer ausgeben"
+      ansible.builtin.debug:
+        msg: "Ansible läuft als: {{ whoami_output.stdout }}"
+
+    - name: "[5] Python-Version prüfen"
+      ansible.builtin.command: python3 --version
+      register: python_version
+      changed_when: false
+      ignore_errors: true
+
+    - name: "[5] Python-Version ausgeben"
+      ansible.builtin.debug:
+        msg: "{{ python_version.stdout | default('Python3 nicht gefunden') }}"
+
+    - name: "[6] Internetverbindung testen (1.1.1.1)"
+      ansible.builtin.command: ping -c 2 1.1.1.1
+      register: ping_result
+      changed_when: false
+      ignore_errors: true
+
+    - name: "[6] Internetverbindung Ergebnis"
+      ansible.builtin.debug:
+        msg: "{{ 'Internetverbindung OK' if ping_result.rc == 0 else 'KEIN Internetzugang!' }}"
+
+    - name: "[7] Zusammenfassung"
+      ansible.builtin.debug:
+        msg:
+          - "=============================="
+          - " Semaphore Test: ERFOLGREICH  "
+          - "=============================="
+          - "Host:    {{ inventory_hostname }}"
+          - "OS:      {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}"
+          - "User:    {{ whoami_output.stdout }}"
+          - "Python:  {{ python_version.stdout | default('N/A') }}"
+          - "Internet: {{ 'OK' if ping_result.rc == 0 else 'FEHLER' }}"
