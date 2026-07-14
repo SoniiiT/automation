@@ -83,6 +83,7 @@ all:
         proxmox:
           vars:
             ansible_user: root
+            ansible_become: false
           hosts:
             pve-srv-01:
         # esxi:
@@ -94,6 +95,7 @@ all:
     lxc_hosts:
       vars:
         ansible_user: root
+        ansible_become: false
       hosts:
         lxc-bind9:
         lxc-harbor:

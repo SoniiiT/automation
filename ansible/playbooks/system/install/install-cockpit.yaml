@@ -3,26 +3,80 @@
   hosts: all,!hypervisors,!lxc-cockpit
   become: true
   tasks:
-    - name: Install Cockpit package
-      package:
-        name: 
-          - cockpit
+    # ── Debian / Ubuntu ────────────────────────────────────────────
+    - name: Install Cockpit (Debian / Ubuntu)
+      apt:
+        name: cockpit
         state: present
+        update_cache: true
+      when: ansible_os_family == "Debian"
 
+    # ── RHEL / CentOS / Fedora ─────────────────────────────────────
+    - name: Install Cockpit (RHEL / CentOS / Fedora)
+      dnf:
+        name: cockpit
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    # ── Arch Linux ─────────────────────────────────────────────────
+    - name: Install Cockpit (Arch Linux)
+      pacman:
+        name: cockpit
+        state: present
+        update_cache: true
+      when: ansible_os_family == "Archlinux"
+
+    # ── Alpine Linux ───────────────────────────────────────────────
+    - name: Cockpit not supported on Alpine Linux (skip)
+      debug:
+        msg: "Cockpit is not available in Alpine Linux standard repos – skipping."
+      when: ansible_os_family == "Alpine"
+
+    # ── SUSE / openSUSE ────────────────────────────────────────────
+    - name: Install Cockpit (SUSE / openSUSE)
+      zypper:
+        name: cockpit
+        state: present
+      when: ansible_os_family == "Suse"
+
+    # ── Service ────────────────────────────────────────────────────
     - name: Enable and start Cockpit service
       systemd:
         name: cockpit.socket
         state: started
         enabled: true
+      when: ansible_os_family in ["Debian", "RedHat", "Archlinux", "Suse"]
 
-    - name: Open firewall for Cockpit (if firewalld is used)
+    # ── Firewall ───────────────────────────────────────────────────
+    - name: Open firewall via firewalld (RHEL-based)
       firewalld:
-        port: 9090/tcp
+        service: cockpit
         permanent: true
+        immediate: true
         state: enabled
       ignore_errors: true
+      when: ansible_os_family == "RedHat"
 
-    - name: Ensure Cockpit is accessible
+    - name: Open firewall via ufw (Debian-based)
+      ufw:
+        rule: allow
+        port: "9090"
+        proto: tcp
+      ignore_errors: true
+      when: ansible_os_family == "Debian"
+
+    - name: Open firewall via firewalld (SUSE-based)
+      firewalld:
+        service: cockpit
+        permanent: true
+        immediate: true
+        state: enabled
+      ignore_errors: true
+      when: ansible_os_family == "Suse"
+
+    # ── Health-check ───────────────────────────────────────────────
+    - name: Ensure Cockpit is accessible on port 9090
       wait_for:
         port: 9090
         timeout: 30
+      when: ansible_os_family in ["Debian", "RedHat", "Archlinux", "Suse"]
