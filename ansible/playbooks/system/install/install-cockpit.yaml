@@ -1,6 +1,6 @@
 ---
 - name: Install and configure Cockpit
-  hosts: all,!hypervisors
+  hosts: all,!hypervisors,!lxc-cockpit
   become: true
   tasks:
     - name: Install Cockpit package
