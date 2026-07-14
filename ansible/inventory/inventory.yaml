@@ -7,10 +7,8 @@ all:
     # --- LXC Hosts ---
     lxc-bind9:
       ansible_host: 192.168.178.3
-    lxc-pterodactyl-panel:
+    lxc-amp:
       ansible_host: 192.168.178.40
-    lxc-pterodactyl-wings:
-      ansible_host: 192.168.178.41
     lxc-harbor:
       ansible_host: 192.168.178.42
     lxc-wireguard:
@@ -25,6 +23,12 @@ all:
       ansible_host: 192.168.178.51
     lxc-scanopy:
       ansible_host: 192.168.178.52
+    lxc-pve-helper-scripts:
+      ansible_host: 192.168.178.53
+    lxc-cosmos:
+      ansible_host: 192.168.178.57
+    lxc-cockpit:
+      ansible_host: 192.168.178.58
     github-runner-packer:
       ansible_host: 192.168.178.72
     github-runner-terraform:
@@ -45,6 +49,8 @@ all:
       ansible_host: 192.168.178.90
     app-srv-01:
       ansible_host: 192.168.178.91
+    app-srv-02:
+      ansible_host: 192.168.178.92
 
     # K3s Cluster
     # k3s-soniiit-server01:
@@ -66,13 +72,24 @@ all:
     rpi01:
       ansible_host: 192.168.178.4
 
+    # --- Network Attached Storage (NAS) ---
+    nas-srv-01:
+      ansible_host: 192.168.178.56
+
   children:
     # --- Infrastructure Groups ---
-    proxmox_servers:
-      vars:
-        ansible_user: root
-      hosts:
-        pve-srv-01:
+    hypervisors:
+      children:
+        proxmox:
+          vars:
+            ansible_user: root
+          hosts:
+            pve-srv-01:
+        # esxi:
+        #   vars:
+        #     ansible_user: root
+        #   hosts:
+        #     esxi-srv-01:
 
     lxc_hosts:
       vars:
@@ -153,3 +170,9 @@ all:
     #         k3s-soniiit-agent01:
     #         k3s-soniiit-agent02:
     #         k3s-soniiit-agent03:
+
+    nas:
+      vars:
+        ansible_user: root
+      hosts:
+        nas-srv-01:
