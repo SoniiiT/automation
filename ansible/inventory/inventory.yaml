@@ -96,8 +96,6 @@ all:
         ansible_user: root
       hosts:
         lxc-bind9:
-        lxc-pterodactyl-panel:
-        lxc-pterodactyl-wings:
         lxc-harbor:
         lxc-wireguard:
         lxc-remotely:
@@ -133,8 +131,6 @@ all:
     docker_servers:
       hosts:
         lxc-bind9:
-        lxc-pterodactyl-panel:
-        lxc-pterodactyl-wings:
         lxc-harbor:
         lxc-wireguard:
         lxc-remotely:
