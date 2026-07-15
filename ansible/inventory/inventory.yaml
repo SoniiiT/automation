@@ -49,8 +49,6 @@ all:
       ansible_host: 192.168.178.90
     app-srv-01:
       ansible_host: 192.168.178.91
-    app-srv-02:
-      ansible_host: 192.168.178.92
 
     # K3s Cluster
     # k3s-soniiit-server01:
@@ -118,7 +116,6 @@ all:
       hosts:
         ai-srv-01:
         app-srv-01:
-        app-srv-02:
         docker-srv-01:
         docker-srv-02:
         docker-srv-03:
@@ -129,7 +126,6 @@ all:
       hosts:
         ai-srv-01:
         app-srv-01:
-        app-srv-02:
 
     #demo_servers:
     #  hosts:
