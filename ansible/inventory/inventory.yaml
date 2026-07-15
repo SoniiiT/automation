@@ -98,6 +98,7 @@ all:
         ansible_become: false
       hosts:
         lxc-bind9:
+        lxc-amp:
         lxc-harbor:
         lxc-wireguard:
         lxc-remotely:
@@ -105,6 +106,9 @@ all:
         lxc-semaphore:
         lxc-omada:
         lxc-scanopy:
+        lxc-pve-helper-scripts:
+        lxc-cosmos:
+        lxc-cockpit:
         github-runner-packer:
         github-runner-terraform:
 
@@ -114,6 +118,7 @@ all:
       hosts:
         ai-srv-01:
         app-srv-01:
+        app-srv-02:
         docker-srv-01:
         docker-srv-02:
         docker-srv-03:
@@ -124,6 +129,7 @@ all:
       hosts:
         ai-srv-01:
         app-srv-01:
+        app-srv-02:
 
     #demo_servers:
     #  hosts:
@@ -136,7 +142,6 @@ all:
         lxc-harbor:
         lxc-wireguard:
         lxc-remotely:
-        lxc-semaphore:
         docker-srv-01:
         docker-srv-02:
         docker-srv-03:
@@ -145,6 +150,12 @@ all:
       hosts:
         github-runner-packer:
         github-runner-terraform:
+
+    nas:
+      vars:
+        ansible_user: soniiit
+      hosts:
+        nas-srv-01:
 
     physical_hosts:
       vars:
@@ -168,9 +179,3 @@ all:
     #         k3s-soniiit-agent01:
     #         k3s-soniiit-agent02:
     #         k3s-soniiit-agent03:
-
-    nas:
-      vars:
-        ansible_user: root
-      hosts:
-        nas-srv-01:
