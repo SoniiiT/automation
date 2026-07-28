@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "project_root": ".",
+  "analysis_mode": "initialized",
+  "analyzed_at": "2026-07-28T10:41:40.149+02:00",
+  "analyzed_areas": [
+    "ansible",
+    "kubernetes",
+    "scripts",
+    "workflows",
+    "documentation",
+    "provider_adapters"
+  ],
+  "scope": {
+    "focus": null,
+    "notes": "Initial repository-wide analysis; no focused area was supplied."
+  },
+  "source_fingerprints": {
+    "git_head": "26c9bfb50f16d62e825aff5a19f9507ed91b5e58",
+    "areas": {
+      ".": {
+        "files": 99,
+        "fingerprint": "ac38a283b923a7932004303f105936f24be705c67f2c665e20b46e433459f69c"
+      },
+      "ansible": {
+        "files": 26,
+        "fingerprint": "cb6f5793995417b56a677755bd56efd20c9ad689a5c48b9ee0b4ede8f674c308"
+      },
+      "kubernetes": {
+        "files": 7,
+        "fingerprint": "cb6e4771de3d09ebace166b0b86c02e5804d3ec709d1dc60a29fd81eb5d82b56"
+      },
+      "scripts": {
+        "files": 37,
+        "fingerprint": "17d57d522785f72cdcbf18005931382f1d52eae8455387984ed5fce2c6603c8b"
+      },
+      "workflows": {
+        "files": 27,
+        "fingerprint": "576e6fcbc4d5568d3be2af043b47cecaeb2b4181b63a88bc27305465becd4d8b"
+      }
+    }
+  },
+  "repository_stats": {
+    "tracked_files": 99,
+    "python_files": 8,
+    "powershell_files": 7,
+    "shell_files": 10,
+    "yaml_files": 50,
+    "markdown_files": 15
+  },
+  "refresh": {
+    "status": "current",
+    "next_trigger": "Refresh after substantial changes to inventories, playbooks, Kestra flows, Kubernetes strategy, or script layout.",
+    "stale_references": []
+  },
+  "security": {
+    "secret_values_captured": false,
+    "secret_configuration_recorded": "Only secret names and roles are recorded; values are intentionally omitted."
+  },
+  "provider_adapters": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".github/copilot-instructions.md"
+  ]
+}
