@@ -1,26 +1,37 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Updates all Git repositories in a specified folder.
+    Updates Git repositories in a specified folder.
 .DESCRIPTION
-    Iterates over all subdirectories in $GithubFolder, stashes local changes,
-    pulls the latest from the current branch's remote, then pops the stash.
-    Results are written to a log file.
+    By default, only fast-forwards a branch when the working tree is clean and
+    the branch is strictly behind its configured upstream. Local changes,
+    untracked files, detached HEADs, missing upstreams, and divergent history
+    are skipped. With Force, the upstream becomes the source of truth.
+.PARAMETER Force
+    Makes the configured upstream the source of truth. Resets tracked files
+    and removes untracked files and directories, but keeps ignored files.
 .PARAMETER GithubFolder
     Path to the folder containing your Git repositories.
     Defaults to the GITHUB_FOLDER environment variable or "$HOME\github".
+.PARAMETER Recurse
+    Also scan nested folders for Git repositories.
 #>
 param(
     [string]$GithubFolder = $(
         if ($env:GITHUB_FOLDER) { $env:GITHUB_FOLDER }
         else { Join-Path $HOME "github" }
-    )
+    ),
+    [Alias("Recursive")]
+    [switch]$Recurse,
+    [switch]$Force
 )
 
 $LogDir  = Join-Path $HOME ".logs"
 $LogFile = Join-Path $LogDir "auto-update-repos.log"
 
-if (-not (Test-Path $LogDir)) { New-Item -ItemType Directory -Path $LogDir -Force | Out-Null }
+if (-not (Test-Path $LogDir)) {
+    New-Item -ItemType Directory -Path $LogDir -Force | Out-Null
+}
 
 function Write-Log {
     param([string]$Message, [string]$Level = "INFO")
@@ -29,23 +40,62 @@ function Write-Log {
     Write-Host $line
 }
 
-if (-not (Test-Path $GithubFolder)) {
-    Write-Log "GitHub folder not found: $GithubFolder" "ERROR"
+function Invoke-GitCommand {
+    param([Parameter(Mandatory = $true)][string[]]$Arguments)
+    $output = @(& git @Arguments 2>&1)
+    [pscustomobject]@{
+        Output   = $output
+        ExitCode = $LASTEXITCODE
+    }
+}
+
+function Get-CommandOutput {
+    param([object[]]$Output)
+    (($Output | ForEach-Object { $_.ToString().Trim() } | Where-Object { $_ }) -join " | ")
+}
+
+if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+    Write-Log "Git wurde nicht gefunden. Bitte Git installieren und erneut ausführen." "ERROR"
     exit 1
 }
 
-Write-Log "=== Starting repo update run ==="
-Write-Log "Scanning: $GithubFolder"
+if (-not (Test-Path $GithubFolder -PathType Container)) {
+    Write-Log "GitHub-Ordner nicht gefunden: $GithubFolder" "ERROR"
+    exit 1
+}
 
-$repos = Get-ChildItem -Path $GithubFolder -Directory |
-         Where-Object { Test-Path (Join-Path $_.FullName ".git") }
+if ($Force) {
+    Write-Log "=== Starting FORCE repo update run (upstream is source of truth) ===" "WARN"
+}
+else {
+    Write-Log "=== Starting safe repo update run ==="
+}
+Write-Log "Scanning: $GithubFolder$(if ($Recurse) { ' (recursive)' })"
+
+if ($Recurse) {
+    $repos = @(
+        Get-ChildItem -Path $GithubFolder -Directory -Recurse -Force |
+            Where-Object { $_.Name -eq ".git" } |
+            ForEach-Object { Get-Item $_.Parent.FullName }
+    )
+}
+else {
+    $repos = @(
+        Get-ChildItem -Path $GithubFolder -Directory |
+            Where-Object { Test-Path (Join-Path $_.FullName ".git") }
+    )
+}
+
+$repos = @($repos | Sort-Object -Property FullName -Unique)
 
 if ($repos.Count -eq 0) {
-    Write-Log "No Git repositories found in $GithubFolder" "WARN"
+    Write-Log "Keine Git-Repositories in $GithubFolder gefunden." "WARN"
     exit 0
 }
 
-$success = 0
+$updated = 0
+$forced  = 0
+$current = 0
 $failed  = 0
 $skipped = 0
 
@@ -57,41 +107,150 @@ foreach ($repo in $repos) {
     Push-Location $repoPath
 
     try {
-        # Check for network connectivity to remote
-        $remoteUrl = git remote get-url origin 2>$null
-        if (-not $remoteUrl) {
-            Write-Log "[$repoName] No remote 'origin' found, skipping." "WARN"
+        $statusResult = Invoke-GitCommand @("status", "--porcelain=v1", "--untracked-files=all")
+        if ($statusResult.ExitCode -ne 0) {
+            Write-Log "[$repoName] Git-Status konnte nicht gelesen werden: $(Get-CommandOutput $statusResult.Output)" "ERROR"
+            $failed++
+            continue
+        }
+
+        $hasLocalChanges = [bool](Get-CommandOutput $statusResult.Output)
+
+        $branchResult = Invoke-GitCommand @("symbolic-ref", "--quiet", "--short", "HEAD")
+        if ($branchResult.ExitCode -ne 0) {
+            Write-Log "[$repoName] Detached HEAD erkannt. Übersprungen." "WARN"
             $skipped++
             continue
         }
 
-        # Stash local changes (including untracked files)
-        $statusOutput = git status --porcelain 2>&1
-        $hasChanges   = $statusOutput -ne $null -and $statusOutput.Length -gt 0
-
-        if ($hasChanges) {
-            Write-Log "[$repoName] Local changes detected — stashing..."
-            git stash push --include-untracked -m "auto-update-repos stash $(Get-Date -Format 'yyyyMMdd-HHmmss')" 2>&1 | Out-Null
+        $branch = Get-CommandOutput $branchResult.Output
+        $upstreamResult = Invoke-GitCommand @("rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}")
+        if ($upstreamResult.ExitCode -ne 0) {
+            Write-Log "[$repoName] Branch '$branch' hat keinen Upstream. Übersprungen." "WARN"
+            $skipped++
+            continue
         }
 
-        # Pull latest on current branch
-        $pullOutput = git pull --ff-only 2>&1
-        Write-Log "[$repoName] pull: $($pullOutput -join ' | ')"
+        $upstream = Get-CommandOutput $upstreamResult.Output
+        $remoteResult = Invoke-GitCommand @("config", "--get", "branch.$branch.remote")
+        if ($remoteResult.ExitCode -ne 0) {
+            Write-Log "[$repoName] Remote für '$branch' konnte nicht bestimmt werden. Übersprungen." "WARN"
+            $skipped++
+            continue
+        }
 
-        # Restore stash if we stashed
-        if ($hasChanges) {
-            $stashList = git stash list 2>&1
-            if ($stashList -match "auto-update-repos stash") {
-                Write-Log "[$repoName] Restoring stash..."
-                $popOutput = git stash pop 2>&1
-                Write-Log "[$repoName] stash pop: $($popOutput -join ' | ')"
+        $remote = Get-CommandOutput $remoteResult.Output
+        $fetchResult = Invoke-GitCommand @("fetch", "--prune", $remote)
+        if ($fetchResult.ExitCode -ne 0) {
+            Write-Log "[$repoName] Fetch von '$remote' fehlgeschlagen: $(Get-CommandOutput $fetchResult.Output)" "ERROR"
+            $failed++
+            continue
+        }
+
+        $countResult = Invoke-GitCommand @("rev-list", "--left-right", "--count", "HEAD...$upstream")
+        if ($countResult.ExitCode -ne 0) {
+            Write-Log "[$repoName] Branch-Status konnte nicht bestimmt werden: $(Get-CommandOutput $countResult.Output)" "ERROR"
+            $failed++
+            continue
+        }
+
+        $countParts = (Get-CommandOutput $countResult.Output) -split "\s+"
+        [int]$ahead = 0
+        [int]$behind = 0
+        if ($countParts.Count -ne 2 -or
+            -not [int]::TryParse($countParts[0], [ref]$ahead) -or
+            -not [int]::TryParse($countParts[1], [ref]$behind)) {
+            Write-Log "[$repoName] Ungültiger Branch-Status: $(Get-CommandOutput $countResult.Output)" "ERROR"
+            $failed++
+            continue
+        }
+
+        if ($Force) {
+            $cleanPreviewResult = Invoke-GitCommand @("clean", "-fdn")
+            if ($cleanPreviewResult.ExitCode -ne 0) {
+                Write-Log "[$repoName] Vorschau der lokalen Dateien konnte nicht erstellt werden: $(Get-CommandOutput $cleanPreviewResult.Output)" "ERROR"
+                $failed++
+                continue
             }
+
+            $cleanPreview = Get-CommandOutput $cleanPreviewResult.Output
+            if ($cleanPreview) {
+                Write-Log "[$repoName] FORCE entfernt nicht getrackte Dateien/Ordner: $cleanPreview" "WARN"
+            }
+
+            $resetResult = Invoke-GitCommand @("reset", "--hard", $upstream)
+            if ($resetResult.ExitCode -ne 0) {
+                Write-Log "[$repoName] FORCE reset auf $upstream fehlgeschlagen: $(Get-CommandOutput $resetResult.Output)" "ERROR"
+                $failed++
+                continue
+            }
+
+            $cleanResult = Invoke-GitCommand @("clean", "-fd")
+            if ($cleanResult.ExitCode -ne 0) {
+                Write-Log "[$repoName] FORCE clean fehlgeschlagen: $(Get-CommandOutput $cleanResult.Output)" "ERROR"
+                $failed++
+                continue
+            }
+
+            Write-Log "[$repoName] FORCE synchronisiert: $branch -> $upstream. Ignorierte Dateien bleiben erhalten." "WARN"
+            $forced++
+            continue
         }
 
-        $success++
+        if ($hasLocalChanges) {
+            if ($behind -gt 0) {
+                Write-Log "[$repoName] Lokale Änderungen oder neue Dateien gefunden; Remote ist zusätzlich +$behind voraus. Übersprungen — nichts wird gestasht oder gelöscht." "WARN"
+            }
+            else {
+                Write-Log "[$repoName] Lokale Änderungen oder neue Dateien gefunden. Übersprungen — nichts wird gestasht oder gelöscht." "WARN"
+            }
+            $skipped++
+            continue
+        }
+
+        if ($ahead -gt 0 -and $behind -gt 0) {
+            Write-Log "[$repoName] Branch ist divergiert (lokal +$ahead, Remote +$behind). Übersprungen — manueller Merge nötig." "WARN"
+            $skipped++
+            continue
+        }
+
+        if ($ahead -gt 0) {
+            Write-Log "[$repoName] Lokale Commits vorhanden (+$ahead), Remote ist nicht voraus. Keine Änderung."
+            $skipped++
+            continue
+        }
+
+        if ($behind -eq 0) {
+            Write-Log "[$repoName] Bereits aktuell."
+            $current++
+            continue
+        }
+
+        $preMergeStatusResult = Invoke-GitCommand @("status", "--porcelain=v1", "--untracked-files=all")
+        if ($preMergeStatusResult.ExitCode -ne 0) {
+            Write-Log "[$repoName] Git-Status konnte vor dem Aktualisieren nicht gelesen werden: $(Get-CommandOutput $preMergeStatusResult.Output)" "ERROR"
+            $failed++
+            continue
+        }
+
+        if (Get-CommandOutput $preMergeStatusResult.Output) {
+            Write-Log "[$repoName] Arbeitsverzeichnis wurde während des Laufs geändert. Übersprungen." "WARN"
+            $skipped++
+            continue
+        }
+
+        $mergeResult = Invoke-GitCommand @("merge", "--ff-only", $upstream)
+        if ($mergeResult.ExitCode -eq 0) {
+            Write-Log "[$repoName] Sicher aktualisiert: $branch -> $upstream ($(Get-CommandOutput $mergeResult.Output))"
+            $updated++
+        }
+        else {
+            Write-Log "[$repoName] Fast-forward fehlgeschlagen: $(Get-CommandOutput $mergeResult.Output)" "ERROR"
+            $failed++
+        }
     }
     catch {
-        Write-Log "[$repoName] Unexpected error: $_" "ERROR"
+        Write-Log "[$repoName] Unerwarteter Fehler: $_" "ERROR"
         $failed++
     }
     finally {
@@ -99,4 +258,6 @@ foreach ($repo in $repos) {
     }
 }
 
-Write-Log "=== Done. Success: $success | Failed: $failed | Skipped: $skipped ==="
+Write-Log "=== Done. Updated: $updated | Forced: $forced | Current: $current | Failed: $failed | Skipped: $skipped ==="
+if ($failed -gt 0) { exit 1 }
+exit 0
