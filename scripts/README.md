@@ -27,3 +27,6 @@ Windows-Skripte sind zusätzlich nach Shell und Zweck gruppiert:
 
 ### 🧰 Utils (`scripts/utils/`)
 Verschiedene Werkzeuge für spezifische Aufgaben.
+
+- **morning-briefing/**: Tagesbriefing aus Outlook, Teams und Autotask mit
+  lokaler Anonymisierung und KI-Zusammenfassung.

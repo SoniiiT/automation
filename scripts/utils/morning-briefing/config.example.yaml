@@ -1,0 +1,53 @@
+# Konfiguration des Morgenbriefings.
+# Kopieren nach config.yaml und anpassen. Niemals Passwörter eintragen -
+# die Anmeldung erfolgt manuell im Browserfenster.
+
+timezone: "Europe/Berlin"
+work_start: "08:00"
+work_end: "17:00"
+lunch_start: "12:00"
+lunch_end: "12:30"
+slot_minutes: 30
+
+# Browserprofil und Berichte liegen ausserhalb des Repositories.
+profile_dir: "~/.morning-briefing/browser-profile"
+output_dir: "~/.morning-briefing/reports"
+headless: false
+login_timeout_seconds: 300
+
+# Claude CLI
+ai_enabled: true
+claude_command: "claude"
+claude_model: ""
+claude_timeout_seconds: 180
+
+# Datenschutz: Namen duerfen bleiben, Kontaktdaten nicht.
+keep_names: true
+company_terms:
+  - "Musterfirma"
+extra_redactions:
+  ASSET: "\\bSRV-\\d{2,}\\b"
+
+outlook:
+  enabled: true
+  url: "https://outlook.office.com/mail/"
+  max_items: 25
+  selectors: {}
+
+calendar:
+  enabled: true
+  url: "https://outlook.office.com/calendar/view/day"
+  max_items: 20
+  selectors: {}
+
+teams:
+  enabled: true
+  url: "https://teams.microsoft.com/v2/"
+  max_items: 25
+  selectors: {}
+
+autotask:
+  enabled: true
+  url: "https://ww1.autotask.net/"
+  max_items: 25
+  selectors: {}

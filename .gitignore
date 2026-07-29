@@ -10,6 +10,9 @@ __pycache__/
 # Claude Code local settings
 .claude/
 
+# Lokale Konfiguration des Morgenbriefings (Pfade, Firmenbegriffe, Selektoren)
+scripts/utils/morning-briefing/config.yaml
+
 # PyInstaller
 build/
 dist/
