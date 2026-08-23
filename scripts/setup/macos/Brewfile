@@ -1,0 +1,69 @@
+# Brewfile für das MacBook-Arbeitsplatz-Setup.
+# Wird von bootstrap.sh via `brew bundle --file=Brewfile` eingelesen.
+# Manuell aktualisieren: `brew bundle dump --file=Brewfile --force` nach Änderungen.
+
+# --- Entwickler-Tools ---
+brew "git"
+brew "gh"      # GitHub CLI
+brew "nvm"     # Node-Versionsmanagement
+brew "pyenv"   # Python-Versionsmanagement
+brew "mas"     # Mac App Store CLI (für App-Store-only Apps wie Command X)
+
+# --- Casks: Alltags-/Business-Apps ---
+cask "microsoft-teams"
+cask "microsoft-office"
+cask "google-chrome"
+cask "firefox"
+cask "1password"
+cask "1password-cli"
+cask "raycast"
+cask "visual-studio-code"
+cask "postman"             # API-Client
+cask "logitech-g-hub"       # Logitech G Peripherie
+cask "logi-options+"        # Logitech Options+ (Maus/Tastatur)
+cask "iterm2"               # Terminal mit Split-Panes/Trigger
+cask "maccy"                 # Zwischenablage-Verlauf
+cask "cleanshot"             # Screenshots/Screen-Recording mit Annotation
+cask "bartender"             # Menüleiste aufräumen/Icons verstecken
+cask "meetingbar"            # Ein-Klick-Beitritt zu Kalender-Meetings
+cask "windows-app"           # Microsoft Remote Desktop / RDP-Client (Nachfolger)
+cask "zoom"                   # Video-Meetings
+cask "vorssaint"              # Menüleisten-Toolkit (Keep-Awake, System-Monitor, Volume-Mixer)
+cask "aldente"                 # Max. Ladeprozent begrenzen (Akkuschonung)
+cask "betterdisplay"           # Erweiterte Display-/Auflösungsverwaltung
+cask "middleclick"             # Mittelklick-Geste per Trackpad
+cask "parallels"               # Parallels Desktop (Windows-VMs u.a.)
+cask "dockdoor"                # Fenster-Vorschau beim Hovern über Dock-Icons
+cask "loop"                    # Fenstermanager (Radialmenü, MrKai77/Loop)
+# Command X: kein Homebrew-Cask, nur Mac App Store (kostenpflichtig, ~4€).
+# Erfordert vorherige Anmeldung im App Store mit der Apple-ID (App Store.app
+# öffnen -> anmelden), sonst schlägt dieser eine Eintrag bei "brew bundle" fehl.
+mas "Command X", id: 6448461551
+
+# Boring Notch: kein offizieller Homebrew-Cask, wird über einen Third-Party-Tap
+# installiert. "brew bundle" tapt "theboredteam/boring-notch" automatisch mit,
+# da der Tap-Eintrag unten im Brewfile steht.
+tap "theboredteam/boring-notch"
+cask "boring-notch"            # Notch-Area-Widgets/Shelf (Ersatz für NotchNook)
+
+# --- Gaming ---
+cask "steam"
+cask "nvidia-geforce-now"
+
+# --- KI / Lokale Modelle ---
+cask "lm-studio"           # Lokale LLMs laden & bedienen
+# Erfordert Apple Silicon (M1/M2/M3/M4) + macOS 12+. Auf Intel-Macs die
+# folgende Zeile auskommentieren, sonst schlägt nur dieser eine Eintrag fehl.
+cask "lm-studio-bionic"    # LM Studios Agenten-App (Code/Work-Workspaces, Cloud+lokal)
+
+# --- KI-Coding-CLIs (Terminal-Agenten) ---
+cask "copilot-cli"         # GitHub Copilot CLI
+cask "claude-code"         # Anthropic Claude Code CLI
+brew "opencode"            # OpenCode – KI-Coding-Agent fürs Terminal
+cask "superset"            # Terminal für Agenten-Orchestrierung (superset.sh)
+# "Pi" (pi.dev) hat keinen Homebrew-Cask/-Formula, wird daher separat per npm
+# installiert (siehe bootstrap.sh, Abschnitt "KI-Coding-CLIs via npm").
+
+# --- Kubernetes-Tools (passend zu den K3s/Kubernetes-Repos) ---
+brew "kubernetes-cli"      # kubectl
+brew "helm"
