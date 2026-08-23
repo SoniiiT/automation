@@ -20,10 +20,10 @@ Einstellungen an.
      Volume-Mixer), AlDente (Ladeprozent-Limit), BetterDisplay (Display-/
      Auflösungsverwaltung), MiddleClick (Mittelklick per Trackpad), Parallels
      Desktop (VMs), DockDoor (Fenster-Vorschau im Dock), Loop (Fenstermanager),
-     Boring Notch (Notch-Erweiterung, Ersatz für NotchNook, via Third-Party-Tap
-     `theboredteam/boring-notch`), Command X (Cut & Paste im Finder, **nur über
-     Mac App Store/`mas`**, kostenpflichtig – erfordert vorherige Anmeldung in
-     der App-Store-App mit der Apple-ID)
+     Nextcloud-Client (Datei-Sync), Boring Notch (Notch-Erweiterung, Ersatz für
+     NotchNook, via Third-Party-Tap `theboredteam/boring-notch`), Command X
+     (Cut & Paste im Finder, **nur über Mac App Store/`mas`**, kostenpflichtig
+     – erfordert vorherige Anmeldung in der App-Store-App mit der Apple-ID)
    - **KI/Lokale Modelle**: LM Studio, LM Studio Bionic (nur auf Apple
      Silicon; auf Intel-Macs wird der Eintrag automatisch übersprungen)
    - **KI-Coding-CLIs**: GitHub Copilot CLI, Claude Code, OpenCode, Superset
@@ -117,3 +117,7 @@ neue Repos werden nach `~/Development/<ordnername>` geklont.
   Firmenzertifikaten – das übernimmt die IT-Einrichtung.
 - Kein automatisches Login für Teams/Office/1Password – diese Apps beim
   ersten Start manuell mit dem Arbeitskonto anmelden.
+- **Memtime** und **Zscaler Client Connector**: haben keinen Homebrew-Cask
+  und erfordern vorab Login/Account bzw. einen firmeneigenen Download-Link
+  (Zscaler wird ggf. ohnehin über MDM ausgerollt) – daher bewusst nicht im
+  Skript enthalten, manuell installieren.

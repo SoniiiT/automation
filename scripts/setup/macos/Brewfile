@@ -35,6 +35,7 @@ cask "middleclick"             # Mittelklick-Geste per Trackpad
 cask "parallels"               # Parallels Desktop (Windows-VMs u.a.)
 cask "dockdoor"                # Fenster-Vorschau beim Hovern über Dock-Icons
 cask "loop"                    # Fenstermanager (Radialmenü, MrKai77/Loop)
+cask "nextcloud"                # Nextcloud-Client (Datei-Sync)
 # Command X: kein Homebrew-Cask, nur Mac App Store (kostenpflichtig, ~4€).
 # Erfordert vorherige Anmeldung im App Store mit der Apple-ID (App Store.app
 # öffnen -> anmelden), sonst schlägt dieser eine Eintrag bei "brew bundle" fehl.
