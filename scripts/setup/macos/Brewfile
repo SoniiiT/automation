@@ -36,10 +36,12 @@ cask "parallels"               # Parallels Desktop (Windows-VMs u.a.)
 cask "dockdoor"                # Fenster-Vorschau beim Hovern über Dock-Icons
 cask "loop"                    # Fenstermanager (Radialmenü, MrKai77/Loop)
 cask "nextcloud"                # Nextcloud-Client (Datei-Sync)
-# Command X: kein Homebrew-Cask, nur Mac App Store (kostenpflichtig, ~4€).
-# Erfordert vorherige Anmeldung im App Store mit der Apple-ID (App Store.app
-# öffnen -> anmelden), sonst schlägt dieser eine Eintrag bei "brew bundle" fehl.
+# Command X & LanScan: keine Homebrew-Casks, nur Mac App Store (beide
+# kostenpflichtig). Erfordert vorherige Anmeldung im App Store mit der
+# Apple-ID (App Store.app öffnen -> anmelden), sonst schlagen diese
+# Einträge bei "brew bundle" fehl.
 mas "Command X", id: 6448461551
+mas "LanScan", id: 472226235       # Netzwerk-/IP-Scanner (Advanced-IP-Scanner-Ersatz)
 
 # Boring Notch: kein offizieller Homebrew-Cask, wird über einen Third-Party-Tap
 # installiert. "brew bundle" tapt "theboredteam/boring-notch" automatisch mit,

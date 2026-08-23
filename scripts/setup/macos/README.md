@@ -23,7 +23,9 @@ Einstellungen an.
      Nextcloud-Client (Datei-Sync), Boring Notch (Notch-Erweiterung, Ersatz für
      NotchNook, via Third-Party-Tap `theboredteam/boring-notch`), Command X
      (Cut & Paste im Finder, **nur über Mac App Store/`mas`**, kostenpflichtig
-     – erfordert vorherige Anmeldung in der App-Store-App mit der Apple-ID)
+     – erfordert vorherige Anmeldung in der App-Store-App mit der Apple-ID),
+     LanScan (Netzwerk-/IP-Scanner, Advanced-IP-Scanner-Ersatz, **ebenfalls
+     nur über Mac App Store/`mas`**, kostenpflichtig)
    - **KI/Lokale Modelle**: LM Studio, LM Studio Bionic (nur auf Apple
      Silicon; auf Intel-Macs wird der Eintrag automatisch übersprungen)
    - **KI-Coding-CLIs**: GitHub Copilot CLI, Claude Code, OpenCode, Superset
