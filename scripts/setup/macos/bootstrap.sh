@@ -281,7 +281,7 @@ defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
 osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to true' >/dev/null 2>&1 || true
 
 # Scrollen: "natürliches" (umgekehrtes) Scrollen deaktivieren -> klassische Richtung
-defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
+defaults write NSGlobalDomain com.apple.swipescrolldirection -bool true
 
 # Hintergrundbild: von einer festen URL herunterladen und für alle Displays setzen.
 WALLPAPER_URL="https://raw.githubusercontent.com/dharmx/walls/main/digital/a_car_with_trees_on_it.png"
