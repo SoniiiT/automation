@@ -1,11 +1,36 @@
 #!/usr/bin/env bash
 # install-macos.sh — Installs update-repos.sh as a launchd agent
 # that runs once at every login.
-# Usage: ./install-macos.sh [/path/to/github/folder]
+# Usage: ./install-macos.sh [/path/to/github/folder] [--recurse] [--force]
 
 set -euo pipefail
 
-GITHUB_FOLDER="${1:-${GITHUB_FOLDER:-$HOME/github}}"
+GITHUB_FOLDER="${GITHUB_FOLDER:-$HOME/github}"
+UPDATER_ARGS=()
+
+if [[ $# -gt 0 && "$1" != -* ]]; then
+    GITHUB_FOLDER="$1"
+    shift
+fi
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --recurse|--recursive|-r) UPDATER_ARGS+=(--recurse) ;;
+        --force|-f)               UPDATER_ARGS+=(--force) ;;
+        *)
+            echo "ERROR: Unknown option: $1" >&2
+            echo "Usage: $0 [/path/to/github/folder] [--recurse] [--force]" >&2
+            exit 2
+            ;;
+    esac
+    shift
+done
+
+ARGS_XML=""
+for arg in ${UPDATER_ARGS[@]+"${UPDATER_ARGS[@]}"}; do
+    ARGS_XML+="        <string>$arg</string>"$'\n'
+done
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPT_PATH="$SCRIPT_DIR/update-repos.sh"
 PLIST_LABEL="com.user.auto-update-repos"
@@ -36,20 +61,17 @@ cat > "$PLIST_FILE" <<EOF
         <string>bash</string>
         <string>$SCRIPT_PATH</string>
         <string>$GITHUB_FOLDER</string>
-    </array>
+$ARGS_XML    </array>
 
     <key>RunAtLoad</key>
     <true/>
 
+    <!-- The script writes its own log (auto-update-repos.log) and waits for the network itself. -->
     <key>StandardOutPath</key>
-    <string>$LOG_DIR/auto-update-repos.log</string>
+    <string>$LOG_DIR/auto-update-repos.launchd.log</string>
 
     <key>StandardErrorPath</key>
-    <string>$LOG_DIR/auto-update-repos.log</string>
-
-    <!-- Wait for network before running -->
-    <key>NetworkState</key>
-    <true/>
+    <string>$LOG_DIR/auto-update-repos.launchd.log</string>
 </dict>
 </plist>
 EOF
@@ -63,6 +85,7 @@ launchctl load "$PLIST_FILE"
 echo "✅ launchd agent installed."
 echo "   Plist  : $PLIST_FILE"
 echo "   Folder : $GITHUB_FOLDER"
+echo "   Options: ${UPDATER_ARGS[*]:-(none)}"
 echo "   Trigger: At every login (RunAtLoad)"
 echo ""
 echo "Logs: $LOG_DIR/auto-update-repos.log"
