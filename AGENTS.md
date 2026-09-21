@@ -8,3 +8,9 @@ Use `.ai-context/` as the canonical shared project context. Consult it before na
 - `.ai-context/knowledge/` for lifecycle, removal, risk, and documented operational guidance.
 
 The context is a compact generated aid, not a replacement for source code or explicit project rules. Verify current behavior in source files before making changes, and never copy secret values into the repository or context.
+
+<!-- openwolf:begin -->
+# OpenWolf
+
+This project uses OpenWolf for context management. Read and follow .wolf/OPENWOLF.md at session start. Check .wolf/cerebrum.md before generating code. Grep .wolf/anatomy.md for a file's path before reading it (never read the whole index).
+<!-- openwolf:end -->

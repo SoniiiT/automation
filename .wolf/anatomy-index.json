@@ -1,0 +1,2801 @@
+{
+  "version": 1,
+  "meta": {
+    "lastScanned": "2026-09-21T16:32:35.375Z",
+    "fileCount": 145,
+    "hits": 0,
+    "misses": 0,
+    "renderedHash": "9fb548529614cff9c813a54ad7fd99cd6b0e45920e6c8ab644138849ea9739ab",
+    "storeUpdatedAt": "2026-09-21T16:32:35.375Z",
+    "rootHash": "8d9458c6fea44fe7"
+  },
+  "files": {
+    ".ai-context/architecture.md": {
+      "description": "Architecture",
+      "tokens": 717,
+      "hash": "24411abe554edde8",
+      "size": 2865,
+      "mtimeMs": 1787554041859.7551,
+      "updatedAt": "2026-09-21T16:32:35.306Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".ai-context/conventions.md": {
+      "description": "Conventions",
+      "tokens": 586,
+      "hash": "94eb519672b8e6d1",
+      "size": 2344,
+      "mtimeMs": 1787554041859.877,
+      "updatedAt": "2026-09-21T16:32:35.306Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".ai-context/dependencies.md": {
+      "description": "Dependencies",
+      "tokens": 458,
+      "hash": "ab1d4752373058e2",
+      "size": 1829,
+      "mtimeMs": 1787554041859.9575,
+      "updatedAt": "2026-09-21T16:32:35.306Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".ai-context/indexes/files.json": {
+      "description": "",
+      "tokens": 2020,
+      "hash": "c98dc3ec70bd22b7",
+      "size": 7067,
+      "mtimeMs": 1787554041860.1199,
+      "updatedAt": "2026-09-21T16:32:35.307Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".ai-context/indexes/symbols.json": {
+      "description": "",
+      "tokens": 733,
+      "hash": "91c1e7b6c52c7dd0",
+      "size": 2565,
+      "mtimeMs": 1787554041860.2097,
+      "updatedAt": "2026-09-21T16:32:35.307Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".ai-context/knowledge/business-rules/index.md": {
+      "description": "Business and operational rules",
+      "tokens": 221,
+      "hash": "66f9d733cf9f9b0d",
+      "size": 882,
+      "mtimeMs": 1787554041860.4675,
+      "updatedAt": "2026-09-21T16:32:35.308Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".ai-context/knowledge/decisions/index.md": {
+      "description": "Decisions",
+      "tokens": 149,
+      "hash": "c208ee678dc78670",
+      "size": 596,
+      "mtimeMs": 1787554041860.6106,
+      "updatedAt": "2026-09-21T16:32:35.308Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".ai-context/knowledge/feature-guides/automation.md": {
+      "description": "Automation feature guide",
+      "tokens": 320,
+      "hash": "c26ed4c834ef1341",
+      "size": 1279,
+      "mtimeMs": 1787554041860.745,
+      "updatedAt": "2026-09-21T16:32:35.308Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".ai-context/knowledge/feature-guides/standalone-tools.md": {
+      "description": "Standalone tools guide",
+      "tokens": 147,
+      "hash": "769ec56c69d2575b",
+      "size": 588,
+      "mtimeMs": 1787554041860.8281,
+      "updatedAt": "2026-09-21T16:32:35.308Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".ai-context/knowledge/README.md": {
+      "description": "Project documentation",
+      "tokens": 151,
+      "hash": "4dd373ba878c7759",
+      "size": 604,
+      "mtimeMs": 1787554041860.342,
+      "updatedAt": "2026-09-21T16:32:35.308Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".ai-context/knowledge/removal-guides/automation.md": {
+      "description": "Removal guidance",
+      "tokens": 342,
+      "hash": "2bbdced34a9da852",
+      "size": 1365,
+      "mtimeMs": 1787554041860.9558,
+      "updatedAt": "2026-09-21T16:32:35.309Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".ai-context/knowledge/risks/index.md": {
+      "description": "Risks and uncertainties",
+      "tokens": 319,
+      "hash": "cc37141d804b3276",
+      "size": 1275,
+      "mtimeMs": 1787554041861.0845,
+      "updatedAt": "2026-09-21T16:32:35.309Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".ai-context/manifest.json": {
+      "description": "",
+      "tokens": 530,
+      "hash": "b7ee5fd10bbf45bb",
+      "size": 1853,
+      "mtimeMs": 1787554041861.164,
+      "updatedAt": "2026-09-21T16:32:35.309Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".ai-context/project-map.md": {
+      "description": "Project map",
+      "tokens": 473,
+      "hash": "2b947ede4eaff428",
+      "size": 1889,
+      "mtimeMs": 1787554041861.2566,
+      "updatedAt": "2026-09-21T16:32:35.309Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".gitattributes": {
+      "description": "Git attributes",
+      "tokens": 8,
+      "hash": "13cb7f5e12dd469d",
+      "size": 29,
+      "mtimeMs": 1787554041861.3315,
+      "updatedAt": "2026-09-21T16:32:35.309Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".github/copilot-instructions.md": {
+      "description": "Copilot instructions",
+      "tokens": 109,
+      "hash": "51a2bdef84413171",
+      "size": 435,
+      "mtimeMs": 1787554041861.4731,
+      "updatedAt": "2026-09-21T16:32:35.309Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    ".gitignore": {
+      "description": "Git ignore rules",
+      "tokens": 70,
+      "hash": "45e4ae8d73c81d51",
+      "size": 262,
+      "mtimeMs": 1787554041861.54,
+      "updatedAt": "2026-09-21T16:32:35.309Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "AGENTS.md": {
+      "description": "Agent instructions",
+      "tokens": 242,
+      "hash": "c3ae452f8746f618",
+      "size": 966,
+      "mtimeMs": 1790008355289.7363,
+      "updatedAt": "2026-09-21T16:32:35.309Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/inventory/inventory.yaml": {
+      "description": "",
+      "tokens": 1125,
+      "hash": "38c410bfaf17573f",
+      "size": 3937,
+      "mtimeMs": 1787554041862.0254,
+      "updatedAt": "2026-09-21T16:32:35.310Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/docker/configure-log-rotation.yaml": {
+      "description": "",
+      "tokens": 151,
+      "hash": "948f50fe582782da",
+      "size": 528,
+      "mtimeMs": 1787554041862.1946,
+      "updatedAt": "2026-09-21T16:32:35.310Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/docker/docker-cleanup.yaml": {
+      "description": "",
+      "tokens": 63,
+      "hash": "4cf4b3f772f81237",
+      "size": 220,
+      "mtimeMs": 1787554041862.281,
+      "updatedAt": "2026-09-21T16:32:35.310Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/docker/install-docker.yaml": {
+      "description": "",
+      "tokens": 1179,
+      "hash": "85591a4831a26251",
+      "size": 4125,
+      "mtimeMs": 1787554041862.3687,
+      "updatedAt": "2026-09-21T16:32:35.310Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/docker/install-portainer.yaml": {
+      "description": "",
+      "tokens": 463,
+      "hash": "1e4e38946cdfd018",
+      "size": 1618,
+      "mtimeMs": 1787554041862.4573,
+      "updatedAt": "2026-09-21T16:32:35.310Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/docker/mount-docker-disk.yaml": {
+      "description": "",
+      "tokens": 347,
+      "hash": "177dd61ba8bc970b",
+      "size": 1213,
+      "mtimeMs": 1787554041862.5415,
+      "updatedAt": "2026-09-21T16:32:35.311Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/docker/setup-cleanup-cron.yaml": {
+      "description": "",
+      "tokens": 156,
+      "hash": "ebc92a6e509003f5",
+      "size": 544,
+      "mtimeMs": 1787554041862.621,
+      "updatedAt": "2026-09-21T16:32:35.311Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/kubernetes/install-agent.yaml": {
+      "description": "",
+      "tokens": 250,
+      "hash": "829d1e9fba841c63",
+      "size": 873,
+      "mtimeMs": 1787554041862.757,
+      "updatedAt": "2026-09-21T16:32:35.311Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/kubernetes/install-kubernetes.yaml": {
+      "description": "",
+      "tokens": 1166,
+      "hash": "42b7fc699e531141",
+      "size": 4079,
+      "mtimeMs": 1787554041862.845,
+      "updatedAt": "2026-09-21T16:32:35.311Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/kubernetes/install-server.yaml": {
+      "description": "",
+      "tokens": 402,
+      "hash": "a1160c946f9076b2",
+      "size": 1407,
+      "mtimeMs": 1787554041862.9512,
+      "updatedAt": "2026-09-21T16:32:35.311Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/kubernetes/longhorn-fix-known-issues.yaml": {
+      "description": "",
+      "tokens": 330,
+      "hash": "4360c2657beb3545",
+      "size": 1155,
+      "mtimeMs": 1787554041863.0332,
+      "updatedAt": "2026-09-21T16:32:35.311Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/kubernetes/uninstall-kubernetes.yaml": {
+      "description": "",
+      "tokens": 102,
+      "hash": "24fdb1a7e2ee79a4",
+      "size": 356,
+      "mtimeMs": 1787554041863.109,
+      "updatedAt": "2026-09-21T16:32:35.311Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/system/check-disk-space.yaml": {
+      "description": "",
+      "tokens": 133,
+      "hash": "90df4847750631a6",
+      "size": 465,
+      "mtimeMs": 1787554041863.2358,
+      "updatedAt": "2026-09-21T16:32:35.312Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/system/extend-disk.yaml": {
+      "description": "",
+      "tokens": 225,
+      "hash": "ec50bb4ee97a8db5",
+      "size": 786,
+      "mtimeMs": 1787554041863.315,
+      "updatedAt": "2026-09-21T16:32:35.312Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/system/hello-world.yaml": {
+      "description": "",
+      "tokens": 72,
+      "hash": "6aaa6b64867e070c",
+      "size": 252,
+      "mtimeMs": 1787554041863.3918,
+      "updatedAt": "2026-09-21T16:32:35.312Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/system/install/install-cockpit-navigator.yaml": {
+      "description": "",
+      "tokens": 192,
+      "hash": "16c57a1c2406dbb4",
+      "size": 672,
+      "mtimeMs": 1787554041863.5078,
+      "updatedAt": "2026-09-21T16:32:35.312Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/system/install/install-cockpit.yaml": {
+      "description": "",
+      "tokens": 730,
+      "hash": "e5cdd2a6e8a8fb1a",
+      "size": 3331,
+      "mtimeMs": 1787554041863.5977,
+      "updatedAt": "2026-09-21T16:32:35.312Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/system/install/install-doppler.yaml": {
+      "description": "",
+      "tokens": 1290,
+      "hash": "9356bc5ebf299c36",
+      "size": 4514,
+      "mtimeMs": 1787554041863.6763,
+      "updatedAt": "2026-09-21T16:32:35.313Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/system/install/install-teleport.yaml": {
+      "description": "",
+      "tokens": 0,
+      "hash": "e3b0c44298fc1c14",
+      "size": 0,
+      "mtimeMs": 1787554041863.7178,
+      "updatedAt": "2026-09-21T16:32:35.313Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/system/mount-disk.yaml": {
+      "description": "",
+      "tokens": 281,
+      "hash": "3374ece7ec0d2198",
+      "size": 983,
+      "mtimeMs": 1787554041863.8005,
+      "updatedAt": "2026-09-21T16:32:35.313Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/system/reboot-required.yaml": {
+      "description": "",
+      "tokens": 111,
+      "hash": "bc81b7536d686405",
+      "size": 388,
+      "mtimeMs": 1787554041863.891,
+      "updatedAt": "2026-09-21T16:32:35.313Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/system/reboot-systems.yaml": {
+      "description": "",
+      "tokens": 47,
+      "hash": "ac7792eadb8da17f",
+      "size": 163,
+      "mtimeMs": 1787554041863.9565,
+      "updatedAt": "2026-09-21T16:32:35.313Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/system/semaphore-test.yaml": {
+      "description": "",
+      "tokens": 576,
+      "hash": "44bd36bd2c522071",
+      "size": 2016,
+      "mtimeMs": 1787554041864.027,
+      "updatedAt": "2026-09-21T16:32:35.313Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/system/uninstall/uninstall-teleport.yaml": {
+      "description": "",
+      "tokens": 291,
+      "hash": "da6150fbb2ac1152",
+      "size": 1018,
+      "mtimeMs": 1787554041864.1445,
+      "updatedAt": "2026-09-21T16:32:35.313Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/playbooks/system/update-upgrade.yaml": {
+      "description": "",
+      "tokens": 1518,
+      "hash": "cffc075686fe7042",
+      "size": 5356,
+      "mtimeMs": 1787554041864.2222,
+      "updatedAt": "2026-09-21T16:32:35.313Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "ansible/README.md": {
+      "description": "Project documentation",
+      "tokens": 775,
+      "hash": "cef03422b9e45542",
+      "size": 3157,
+      "mtimeMs": 1787554041861.891,
+      "updatedAt": "2026-09-21T16:32:35.313Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "CLAUDE.md": {
+      "description": "OpenWolf",
+      "tokens": 179,
+      "hash": "9d60ce690811b7a9",
+      "size": 714,
+      "mtimeMs": 1790008355283.976,
+      "updatedAt": "2026-09-21T16:32:35.313Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "kubernetes/Multi Master Cluster/Setup_Script_Ubuntu-20-04/install_Loadbalancer.sh": {
+      "description": "Works Only on Ubuntu 20.04",
+      "tokens": 1376,
+      "hash": "033f91186be446cb",
+      "size": 4813,
+      "mtimeMs": 1787554041864.4316,
+      "updatedAt": "2026-09-21T16:32:35.314Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "kubernetes/Multi Master Cluster/Setup_Script_Ubuntu-20-04/install_MasterWorker.sh": {
+      "description": "Works Only on Ubuntu 20.04",
+      "tokens": 392,
+      "hash": "056552d936a94885",
+      "size": 1370,
+      "mtimeMs": 1787554041864.517,
+      "updatedAt": "2026-09-21T16:32:35.314Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "kubernetes/Multi Master Cluster/Setup_Script_Ubuntu-22-04/install_Loadbalancer.sh": {
+      "description": "Works Only on Ubuntu 22.04",
+      "tokens": 1376,
+      "hash": "eeb198959e2b0570",
+      "size": 4813,
+      "mtimeMs": 1787554041864.6404,
+      "updatedAt": "2026-09-21T16:32:35.314Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "kubernetes/Multi Master Cluster/Setup_Script_Ubuntu-22-04/install_MasterWorker.sh": {
+      "description": "Works Only on Ubuntu 22.04",
+      "tokens": 392,
+      "hash": "3957df7beac73fc6",
+      "size": 1370,
+      "mtimeMs": 1787554041864.7224,
+      "updatedAt": "2026-09-21T16:32:35.314Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "kubernetes/Multi Master Cluster/Setup_Script_Ubuntu-24-04/install_Loadbalancer.sh": {
+      "description": "Works Only on Ubuntu 24.04",
+      "tokens": 1364,
+      "hash": "c62924dc1bfe081c",
+      "size": 4773,
+      "mtimeMs": 1787554041864.841,
+      "updatedAt": "2026-09-21T16:32:35.314Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "kubernetes/Multi Master Cluster/Setup_Script_Ubuntu-24-04/install_MasterWorker.sh": {
+      "description": "Works Only on Ubuntu 24.04",
+      "tokens": 318,
+      "hash": "d180c30044768a18",
+      "size": 1110,
+      "mtimeMs": 1787554041864.91,
+      "updatedAt": "2026-09-21T16:32:35.314Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "kubernetes/README.md": {
+      "description": "Project documentation",
+      "tokens": 357,
+      "hash": "70efc893e5ffc1ee",
+      "size": 1452,
+      "mtimeMs": 1787554041864.9807,
+      "updatedAt": "2026-09-21T16:32:35.315Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "README.md": {
+      "description": "Project documentation",
+      "tokens": 420,
+      "hash": "3b4acf1673a12f72",
+      "size": 1707,
+      "mtimeMs": 1787554041861.7664,
+      "updatedAt": "2026-09-21T16:32:35.315Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/gaming/minecraft-modpack/create-server-modpack.py": {
+      "description": "download_file, extract_zip, detect_loader, download_server_jar + 5 more",
+      "tokens": 2318,
+      "hash": "224115ddb648d14d",
+      "size": 8126,
+      "mtimeMs": 1787554041865.2463,
+      "updatedAt": "2026-09-21T16:32:35.315Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "download_file",
+          "kind": "fn",
+          "startLine": 11,
+          "endLine": 16,
+          "tokens": 66
+        },
+        {
+          "name": "extract_zip",
+          "kind": "fn",
+          "startLine": 18,
+          "endLine": 20,
+          "tokens": 37
+        },
+        {
+          "name": "detect_loader",
+          "kind": "fn",
+          "startLine": 22,
+          "endLine": 37,
+          "tokens": 198
+        },
+        {
+          "name": "download_server_jar",
+          "kind": "fn",
+          "startLine": 39,
+          "endLine": 56,
+          "tokens": 270
+        },
+        {
+          "name": "run_installer",
+          "kind": "fn",
+          "startLine": 58,
+          "endLine": 86,
+          "tokens": 459
+        },
+        {
+          "name": "filter_client_mods",
+          "kind": "fn",
+          "startLine": 88,
+          "endLine": 94,
+          "tokens": 117
+        },
+        {
+          "name": "create_startup_scripts",
+          "kind": "fn",
+          "startLine": 96,
+          "endLine": 118,
+          "tokens": 322
+        },
+        {
+          "name": "download_mods_from_manifest",
+          "kind": "fn",
+          "startLine": 120,
+          "endLine": 137,
+          "tokens": 247
+        },
+        {
+          "name": "create_server_modpack",
+          "kind": "fn",
+          "startLine": 139,
+          "endLine": 173,
+          "tokens": 529
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "def download_file(url, dest):\ndef extract_zip(zip_path, extract_to):\ndef detect_loader(modpack_dir):\ndef download_server_jar(loader, mc_version, loader_version, dest_dir):\ndef run_installer(loader, server_jar, server_dir, mc_version, loader_version):\ndef filter_client_mods(mods_dir):\ndef create_startup_scripts(server_dir, loader, mc_version, loader_version):\ndef download_mods_from_manifest(manifest_path, mods_dir):\ndef create_server_modpack(modpack_url):",
+      "importance": 0.1987
+    },
+    "scripts/gaming/minecraft-modpack/requirements.txt": {
+      "description": "Python dependencies",
+      "tokens": 9,
+      "hash": "0728581d0b0ef70f",
+      "size": 34,
+      "mtimeMs": 1787554041865.314,
+      "updatedAt": "2026-09-21T16:32:35.315Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/maintenance/auto-update-repos/install-linux.sh": {
+      "description": "install-linux.sh — Installs update-repos.sh as a systemd user service",
+      "tokens": 401,
+      "hash": "6a7ba44e976b6f15",
+      "size": 1407,
+      "mtimeMs": 1787554041865.5732,
+      "updatedAt": "2026-09-21T16:32:35.316Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/maintenance/auto-update-repos/install-macos.sh": {
+      "description": "install-macos.sh — Installs update-repos.sh as a launchd agent",
+      "tokens": 525,
+      "hash": "5ce759178fe1479a",
+      "size": 1841,
+      "mtimeMs": 1787554041865.668,
+      "updatedAt": "2026-09-21T16:32:35.316Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/maintenance/auto-update-repos/install-windows.ps1": {
+      "description": "Requires -RunAsAdministrator",
+      "tokens": 728,
+      "hash": "2822fbe5ccfbb84f",
+      "size": 2731,
+      "mtimeMs": 1787554041865.8015,
+      "updatedAt": "2026-09-21T16:32:35.316Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/maintenance/auto-update-repos/README.md": {
+      "description": "Project documentation",
+      "tokens": 900,
+      "hash": "ddf11148f434c5f7",
+      "size": 3626,
+      "mtimeMs": 1787554041865.484,
+      "updatedAt": "2026-09-21T16:32:35.316Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/maintenance/auto-update-repos/update-repos.ps1": {
+      "description": "Requires -Version 5.1",
+      "tokens": 2522,
+      "hash": "ec48fa195d719e86",
+      "size": 9480,
+      "mtimeMs": 1787554041865.9229,
+      "updatedAt": "2026-09-21T16:32:35.316Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/maintenance/auto-update-repos/update-repos.sh": {
+      "description": "update-repos.sh — Safely fast-forwards or forcibly synchronizes Git repositories.",
+      "tokens": 2187,
+      "hash": "0d5684243602d399",
+      "size": 7682,
+      "mtimeMs": 1787554041866.0117,
+      "updatedAt": "2026-09-21T16:32:35.316Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/maintenance/opencode-venice-sync/README.md": {
+      "description": "Project documentation",
+      "tokens": 379,
+      "hash": "0c89f911ee6db54a",
+      "size": 1530,
+      "mtimeMs": 1789977857184.9448,
+      "updatedAt": "2026-09-21T16:32:35.317Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/maintenance/opencode-venice-sync/sync-venice-models.py": {
+      "description": "strip_jsonc_comments, load_config, save_config, fetch_live_models + 1 more",
+      "tokens": 935,
+      "hash": "f0492daf72841206",
+      "size": 3272,
+      "mtimeMs": 1789977845982.49,
+      "updatedAt": "2026-09-21T16:32:35.317Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "strip_jsonc_comments",
+          "kind": "fn",
+          "startLine": 26,
+          "endLine": 29,
+          "tokens": 45
+        },
+        {
+          "name": "load_config",
+          "kind": "fn",
+          "startLine": 32,
+          "endLine": 35,
+          "tokens": 44
+        },
+        {
+          "name": "save_config",
+          "kind": "fn",
+          "startLine": 38,
+          "endLine": 40,
+          "tokens": 48
+        },
+        {
+          "name": "fetch_live_models",
+          "kind": "fn",
+          "startLine": 43,
+          "endLine": 53,
+          "tokens": 125
+        },
+        {
+          "name": "main",
+          "kind": "fn",
+          "startLine": 56,
+          "endLine": 99,
+          "tokens": 440
+        }
+      ],
+      "symbolSource": "ts",
+      "importance": 0.1987
+    },
+    "scripts/maintenance/system-cleanup/start_cleanup.py": {
+      "description": "get_disk_usage, cleanup_system, main",
+      "tokens": 539,
+      "hash": "4f2740aaa1c1a803",
+      "size": 1896,
+      "mtimeMs": 1787554041866.1394,
+      "updatedAt": "2026-09-21T16:32:35.317Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "get_disk_usage",
+          "kind": "fn",
+          "startLine": 8,
+          "endLine": 15,
+          "tokens": 73
+        },
+        {
+          "name": "cleanup_system",
+          "kind": "fn",
+          "startLine": 17,
+          "endLine": 35,
+          "tokens": 174
+        },
+        {
+          "name": "main",
+          "kind": "fn",
+          "startLine": 37,
+          "endLine": 61,
+          "tokens": 252
+        }
+      ],
+      "symbolSource": "ts",
+      "importance": 0.1987
+    },
+    "scripts/README.md": {
+      "description": "Project documentation",
+      "tokens": 340,
+      "hash": "a111fda83c09eb09",
+      "size": 1384,
+      "mtimeMs": 1787554041865.082,
+      "updatedAt": "2026-09-21T16:32:35.317Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/setup/huggingface-downloader/linux/install.sh": {
+      "description": "Installiert HuggingFaceModelDownloader (hfdownloader) auf Linux inkl.",
+      "tokens": 1519,
+      "hash": "07cbb656ca9b065c",
+      "size": 5324,
+      "mtimeMs": 1787554041866.4675,
+      "updatedAt": "2026-09-21T16:32:35.317Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/setup/huggingface-downloader/macos/install.sh": {
+      "description": "Installiert HuggingFaceModelDownloader (hfdownloader) auf macOS inkl.",
+      "tokens": 1490,
+      "hash": "39de3d3acfb580cf",
+      "size": 5224,
+      "mtimeMs": 1787554041866.588,
+      "updatedAt": "2026-09-21T16:32:35.318Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/setup/huggingface-downloader/README.md": {
+      "description": "Project documentation",
+      "tokens": 935,
+      "hash": "991fb31589b57d44",
+      "size": 3784,
+      "mtimeMs": 1787554041866.3367,
+      "updatedAt": "2026-09-21T16:32:35.318Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/setup/huggingface-downloader/windows/install.ps1": {
+      "description": "Requires -Version 5.1",
+      "tokens": 2161,
+      "hash": "fbf7106f50d57a8a",
+      "size": 8130,
+      "mtimeMs": 1787554041866.717,
+      "updatedAt": "2026-09-21T16:32:35.318Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/setup/linux/empty.md": {
+      "description": "",
+      "tokens": 0,
+      "hash": "e3b0c44298fc1c14",
+      "size": 0,
+      "mtimeMs": 1787554041866.793,
+      "updatedAt": "2026-09-21T16:32:35.318Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/setup/macos/bootstrap.sh": {
+      "description": "Bootstrap-Skript für ein neues Arbeits-MacBook.",
+      "tokens": 4398,
+      "hash": "7cee6dbeadd5fc26",
+      "size": 15444,
+      "mtimeMs": 1787871454609.3567,
+      "updatedAt": "2026-09-21T16:32:35.318Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/setup/macos/Brewfile": {
+      "description": "Brewfile für das MacBook-Arbeitsplatz-Setup.",
+      "tokens": 926,
+      "hash": "df82676e384736e1",
+      "size": 3489,
+      "mtimeMs": 1787554041866.9187,
+      "updatedAt": "2026-09-21T16:32:35.318Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/setup/macos/README.md": {
+      "description": "Project documentation",
+      "tokens": 1599,
+      "hash": "08982df47880d18b",
+      "size": 6447,
+      "mtimeMs": 1787554041867.0068,
+      "updatedAt": "2026-09-21T16:32:35.319Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/setup/windows/powershell/autopilot/autopilot_general_gaming.ps1": {
+      "description": "Check if PowerShell is running with elevated privileges",
+      "tokens": 757,
+      "hash": "8aebd9da94761395",
+      "size": 2838,
+      "mtimeMs": 1787554041867.348,
+      "updatedAt": "2026-09-21T16:32:35.319Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/setup/windows/powershell/autopilot/autopilot_itcares.ps1": {
+      "description": "Debloat Windows",
+      "tokens": 2530,
+      "hash": "75009a6cebf3e9a3",
+      "size": 9485,
+      "mtimeMs": 1787554041867.442,
+      "updatedAt": "2026-09-21T16:32:35.319Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/setup/windows/powershell/autopilot/autopilot_sweniii11.ps1": {
+      "description": "Install Chocolatey (if not already installed)",
+      "tokens": 304,
+      "hash": "e11d804e72e22ebc",
+      "size": 1140,
+      "mtimeMs": 1787554041867.5256,
+      "updatedAt": "2026-09-21T16:32:35.319Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/setup/windows/powershell/docker/build-local-docker-image.ps1": {
+      "description": "",
+      "tokens": 1219,
+      "hash": "e4f869bc262e3505",
+      "size": 4577,
+      "mtimeMs": 1787554041867.6575,
+      "updatedAt": "2026-09-21T16:32:35.319Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/setup/windows/powershell/system/debloat-windows.ps1": {
+      "description": "Declares Remove",
+      "tokens": 6071,
+      "hash": "274298b4f8054393",
+      "size": 22766,
+      "mtimeMs": 1787554041867.8132,
+      "updatedAt": "2026-09-21T16:32:35.320Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/setup/windows/README.md": {
+      "description": "Project documentation",
+      "tokens": 141,
+      "hash": "1f97ed0ded5af4d0",
+      "size": 561,
+      "mtimeMs": 1787554041867.207,
+      "updatedAt": "2026-09-21T16:32:35.320Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/anti-afk/antiafk.py": {
+      "description": "Keyboard Controller erstellen",
+      "tokens": 278,
+      "hash": "35b2f16d76e483ed",
+      "size": 976,
+      "mtimeMs": 1787554041867.953,
+      "updatedAt": "2026-09-21T16:32:35.320Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/anti-afk/requirements.txt": {
+      "description": "Python dependencies",
+      "tokens": 4,
+      "hash": "6b941cb19c4f19c3",
+      "size": 14,
+      "mtimeMs": 1787554041868.0115,
+      "updatedAt": "2026-09-21T16:32:35.320Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/cloc-visu/cloc_visualizer.py": {
+      "description": "parse_data, get_col_index, make_autopct, my_autopct",
+      "tokens": 3978,
+      "hash": "f6b5e84074596ae9",
+      "size": 13935,
+      "mtimeMs": 1787554041868.2275,
+      "updatedAt": "2026-09-21T16:32:35.321Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "parse_data",
+          "kind": "fn",
+          "startLine": 20,
+          "endLine": 59,
+          "tokens": 484
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "def parse_data(content):",
+      "importance": 0.1987
+    },
+    "scripts/utils/cloc-visu/README.md": {
+      "description": "Project documentation",
+      "tokens": 238,
+      "hash": "d6b8de488909be44",
+      "size": 955,
+      "mtimeMs": 1787554041868.12,
+      "updatedAt": "2026-09-21T16:32:35.321Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/cloc-visu/requirements.txt": {
+      "description": "Python dependencies",
+      "tokens": 9,
+      "hash": "de93952bddf1a4b4",
+      "size": 36,
+      "mtimeMs": 1787554041868.2864,
+      "updatedAt": "2026-09-21T16:32:35.321Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/converters/csv-to-excel/csv_to_excel_converter.py": {
+      "description": "GUI Imports",
+      "tokens": 4292,
+      "hash": "dd034ce0850884d9",
+      "size": 15030,
+      "mtimeMs": 1787554041868.52,
+      "updatedAt": "2026-09-21T16:32:35.321Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "CsvConverter",
+          "kind": "class",
+          "startLine": 24,
+          "endLine": 120,
+          "tokens": 1162
+        },
+        {
+          "name": "ModernGui",
+          "kind": "class",
+          "startLine": 122,
+          "endLine": 370,
+          "tokens": 2551
+        },
+        {
+          "name": "ModernGui.__init__",
+          "kind": "method",
+          "startLine": 125,
+          "endLine": 244,
+          "tokens": 1217
+        },
+        {
+          "name": "ModernGui.toggle_theme",
+          "kind": "method",
+          "startLine": 246,
+          "endLine": 250,
+          "tokens": 51
+        },
+        {
+          "name": "ModernGui.refresh_file_list",
+          "kind": "method",
+          "startLine": 252,
+          "endLine": 280,
+          "tokens": 307
+        },
+        {
+          "name": "ModernGui.add_files",
+          "kind": "method",
+          "startLine": 282,
+          "endLine": 294,
+          "tokens": 124
+        },
+        {
+          "name": "ModernGui.add_folder",
+          "kind": "method",
+          "startLine": 296,
+          "endLine": 307,
+          "tokens": 129
+        },
+        {
+          "name": "ModernGui.clear_list",
+          "kind": "method",
+          "startLine": 309,
+          "endLine": 313,
+          "tokens": 52
+        },
+        {
+          "name": "ModernGui.start_conversion_thread",
+          "kind": "method",
+          "startLine": 315,
+          "endLine": 325,
+          "tokens": 141
+        },
+        {
+          "name": "ModernGui.process_files",
+          "kind": "method",
+          "startLine": 327,
+          "endLine": 352,
+          "tokens": 311
+        },
+        {
+          "name": "ModernGui._update_gui",
+          "kind": "method",
+          "startLine": 354,
+          "endLine": 356,
+          "tokens": 36
+        },
+        {
+          "name": "ModernGui._finish_conversion",
+          "kind": "method",
+          "startLine": 358,
+          "endLine": 370,
+          "tokens": 157
+        },
+        {
+          "name": "main",
+          "kind": "fn",
+          "startLine": 373,
+          "endLine": 415,
+          "tokens": 425
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "class CsvConverter:\nclass ModernGui(ctk.CTk):\n    def __init__(self):\n    def toggle_theme(self):\n    def refresh_file_list(self):\n    def add_files(self):\n    def add_folder(self):\n    def clear_list(self):\n    def start_conversion_thread(self):\n    def process_files(self):\n    def _update_gui(self, msg, progress):\n    def _finish_conversion(self, success, total):\ndef main():",
+      "importance": 0.1987
+    },
+    "scripts/utils/converters/csv-to-excel/README.md": {
+      "description": "Project documentation",
+      "tokens": 1019,
+      "hash": "92b12ad36a780712",
+      "size": 4146,
+      "mtimeMs": 1787554041868.432,
+      "updatedAt": "2026-09-21T16:32:35.321Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/converters/csv-to-excel/requirements.txt": {
+      "description": "Python dependencies",
+      "tokens": 49,
+      "hash": "e8f4768b73d74bbd",
+      "size": 198,
+      "mtimeMs": 1787554041868.5935,
+      "updatedAt": "2026-09-21T16:32:35.321Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/morning-briefing/briefing/__init__.py": {
+      "description": "Morning Briefing - Paketinitialisierung.",
+      "tokens": 28,
+      "hash": "d3472f438b4f4a02",
+      "size": 96,
+      "mtimeMs": 1787554041868.8816,
+      "updatedAt": "2026-09-21T16:32:35.322Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/morning-briefing/briefing/collectors/__init__.py": {
+      "description": "Collectors für die einzelnen Quellen.",
+      "tokens": 116,
+      "hash": "79b4bce3bdf1f4a2",
+      "size": 404,
+      "mtimeMs": 1787554041869.0366,
+      "updatedAt": "2026-09-21T16:32:35.322Z",
+      "source": "scan",
+      "imports": [
+        "scripts/utils/morning-briefing/briefing/collectors/autotask.py",
+        "scripts/utils/morning-briefing/briefing/collectors/browser.py",
+        "scripts/utils/morning-briefing/briefing/collectors/microsoft.py"
+      ],
+      "importance": 0.2465
+    },
+    "scripts/utils/morning-briefing/briefing/collectors/autotask.py": {
+      "description": "Collector für Kaseya Autotask (Weboberfläche, ausschließlich lesend).",
+      "tokens": 884,
+      "hash": "0e5917bdd3ba872f",
+      "size": 3097,
+      "mtimeMs": 1787554041869.145,
+      "updatedAt": "2026-09-21T16:32:35.322Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "_cells",
+          "kind": "fn",
+          "startLine": 33,
+          "endLine": 37,
+          "tokens": 62
+        },
+        {
+          "name": "detect_priority",
+          "kind": "fn",
+          "startLine": 40,
+          "endLine": 45,
+          "tokens": 59
+        },
+        {
+          "name": "collect_autotask",
+          "kind": "fn",
+          "startLine": 48,
+          "endLine": 93,
+          "tokens": 517
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "scripts/utils/morning-briefing/briefing/collectors/browser.py"
+      ],
+      "importance": 0.2897
+    },
+    "scripts/utils/morning-briefing/briefing/collectors/browser.py": {
+      "description": "Browsersitzung mit persistentem Profil.",
+      "tokens": 952,
+      "hash": "5755da74de69b752",
+      "size": 3335,
+      "mtimeMs": 1787554041869.274,
+      "updatedAt": "2026-09-21T16:32:35.322Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "CollectorResult",
+          "kind": "class",
+          "startLine": 17,
+          "endLine": 19,
+          "tokens": 20
+        },
+        {
+          "name": "unavailable",
+          "kind": "fn",
+          "startLine": 22,
+          "endLine": 23,
+          "tokens": 47
+        },
+        {
+          "name": "BrowserSession",
+          "kind": "class",
+          "startLine": 26,
+          "endLine": 89,
+          "tokens": 774
+        },
+        {
+          "name": "BrowserSession.__init__",
+          "kind": "method",
+          "startLine": 29,
+          "endLine": 35,
+          "tokens": 89
+        },
+        {
+          "name": "BrowserSession.__enter__",
+          "kind": "method",
+          "startLine": 37,
+          "endLine": 54,
+          "tokens": 247
+        },
+        {
+          "name": "BrowserSession.__exit__",
+          "kind": "method",
+          "startLine": 56,
+          "endLine": 62,
+          "tokens": 99
+        },
+        {
+          "name": "BrowserSession.open",
+          "kind": "method",
+          "startLine": 68,
+          "endLine": 89,
+          "tokens": 280
+        }
+      ],
+      "symbolSource": "ts",
+      "importance": 0.7611
+    },
+    "scripts/utils/morning-briefing/briefing/collectors/microsoft.py": {
+      "description": "Collectors für Outlook Web, Outlook-Kalender und Teams Web.",
+      "tokens": 2140,
+      "hash": "90680fab957b325e",
+      "size": 7498,
+      "mtimeMs": 1787554041869.3762,
+      "updatedAt": "2026-09-21T16:32:35.323Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "_selector",
+          "kind": "fn",
+          "startLine": 43,
+          "endLine": 44,
+          "tokens": 38
+        },
+        {
+          "name": "_url",
+          "kind": "fn",
+          "startLine": 47,
+          "endLine": 48,
+          "tokens": 30
+        },
+        {
+          "name": "_text",
+          "kind": "fn",
+          "startLine": 51,
+          "endLine": 56,
+          "tokens": 67
+        },
+        {
+          "name": "collect_outlook_mail",
+          "kind": "fn",
+          "startLine": 59,
+          "endLine": 101,
+          "tokens": 489
+        },
+        {
+          "name": "collect_calendar",
+          "kind": "fn",
+          "startLine": 104,
+          "endLine": 156,
+          "tokens": 591
+        },
+        {
+          "name": "collect_teams",
+          "kind": "fn",
+          "startLine": 159,
+          "endLine": 204,
+          "tokens": 519
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "def _selector(config: SourceConfig, defaults: dict[str, str], key: str) -> str:\ndef _url(config: SourceConfig, defaults: dict[str, str]) -> str:\ndef _text(node: Any, selector: str) -> str:\ndef collect_outlook_mail(session, config: SourceConfig, now: datetime) -> CollectorResult:\ndef collect_calendar(session, config: SourceConfig, now: datetime) -> CollectorResult:\ndef collect_teams(session, config: SourceConfig, now: datetime) -> CollectorResult:",
+      "imports": [
+        "scripts/utils/morning-briefing/briefing/collectors/browser.py"
+      ],
+      "importance": 0.2897
+    },
+    "scripts/utils/morning-briefing/briefing/config.py": {
+      "description": "Konfiguration des Morgenbriefings.",
+      "tokens": 867,
+      "hash": "7e8a033aef95d593",
+      "size": 3034,
+      "mtimeMs": 1787554041869.5107,
+      "updatedAt": "2026-09-21T16:32:35.323Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "SourceConfig",
+          "kind": "class",
+          "startLine": 19,
+          "endLine": 24,
+          "tokens": 50
+        },
+        {
+          "name": "Config",
+          "kind": "class",
+          "startLine": 28,
+          "endLine": 77,
+          "tokens": 602
+        },
+        {
+          "name": "Config.source",
+          "kind": "method",
+          "startLine": 76,
+          "endLine": 77,
+          "tokens": 24
+        },
+        {
+          "name": "_default_path",
+          "kind": "fn",
+          "startLine": 80,
+          "endLine": 87,
+          "tokens": 97
+        }
+      ],
+      "symbolSource": "ts",
+      "importance": 0.2465
+    },
+    "scripts/utils/morning-briefing/briefing/demo.py": {
+      "description": "Beispieldaten für einen Offline-Lauf ohne Browser und ohne echte Konten.",
+      "tokens": 1200,
+      "hash": "e160e83db5dff76a",
+      "size": 4202,
+      "mtimeMs": 1787554041869.633,
+      "updatedAt": "2026-09-21T16:32:35.323Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "demo_items",
+          "kind": "fn",
+          "startLine": 10,
+          "endLine": 105,
+          "tokens": 1043
+        },
+        {
+          "name": "demo_statuses",
+          "kind": "fn",
+          "startLine": 108,
+          "endLine": 114,
+          "tokens": 94
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "scripts/utils/morning-briefing/briefing/models.py"
+      ],
+      "importance": 0.2198
+    },
+    "scripts/utils/morning-briefing/briefing/models.py": {
+      "description": "Datenmodelle für das Morgenbriefing.",
+      "tokens": 864,
+      "hash": "24116044ec515621",
+      "size": 3025,
+      "mtimeMs": 1787554041869.7605,
+      "updatedAt": "2026-09-21T16:32:35.323Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "Source",
+          "kind": "class",
+          "startLine": 11,
+          "endLine": 15,
+          "tokens": 42
+        },
+        {
+          "name": "Priority",
+          "kind": "class",
+          "startLine": 18,
+          "endLine": 33,
+          "tokens": 102
+        },
+        {
+          "name": "Bucket",
+          "kind": "class",
+          "startLine": 36,
+          "endLine": 41,
+          "tokens": 41
+        },
+        {
+          "name": "Item",
+          "kind": "class",
+          "startLine": 45,
+          "endLine": 74,
+          "tokens": 245
+        },
+        {
+          "name": "SourceStatus",
+          "kind": "class",
+          "startLine": 78,
+          "endLine": 90,
+          "tokens": 94
+        },
+        {
+          "name": "PlannedTask",
+          "kind": "class",
+          "startLine": 94,
+          "endLine": 106,
+          "tokens": 109
+        },
+        {
+          "name": "Briefing",
+          "kind": "class",
+          "startLine": 110,
+          "endLine": 123,
+          "tokens": 159
+        },
+        {
+          "name": "Briefing.bucket",
+          "kind": "method",
+          "startLine": 122,
+          "endLine": 123,
+          "tokens": 37
+        }
+      ],
+      "symbolSource": "ts",
+      "importance": 1
+    },
+    "scripts/utils/morning-briefing/briefing/normalize.py": {
+      "description": "Normalisierung: HTML entfernen, Signaturen kürzen, Duplikate zusammenführen.",
+      "tokens": 1560,
+      "hash": "8a41282be67fae44",
+      "size": 5484,
+      "mtimeMs": 1787554041869.8733,
+      "updatedAt": "2026-09-21T16:32:35.323Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "_TextExtractor",
+          "kind": "class",
+          "startLine": 41,
+          "endLine": 62,
+          "tokens": 210
+        },
+        {
+          "name": "_TextExtractor.__init__",
+          "kind": "method",
+          "startLine": 42,
+          "endLine": 45,
+          "tokens": 40
+        },
+        {
+          "name": "_TextExtractor.handle_starttag",
+          "kind": "method",
+          "startLine": 47,
+          "endLine": 51,
+          "tokens": 71
+        },
+        {
+          "name": "_TextExtractor.handle_endtag",
+          "kind": "method",
+          "startLine": 53,
+          "endLine": 55,
+          "tokens": 39
+        },
+        {
+          "name": "_TextExtractor.handle_data",
+          "kind": "method",
+          "startLine": 57,
+          "endLine": 59,
+          "tokens": 31
+        },
+        {
+          "name": "_TextExtractor.text",
+          "kind": "method",
+          "startLine": 61,
+          "endLine": 62,
+          "tokens": 18
+        },
+        {
+          "name": "strip_html",
+          "kind": "fn",
+          "startLine": 65,
+          "endLine": 70,
+          "tokens": 46
+        },
+        {
+          "name": "clean_body",
+          "kind": "fn",
+          "startLine": 73,
+          "endLine": 93,
+          "tokens": 241
+        },
+        {
+          "name": "_cut_inline_signature",
+          "kind": "fn",
+          "startLine": 96,
+          "endLine": 104,
+          "tokens": 95
+        },
+        {
+          "name": "_fingerprint",
+          "kind": "fn",
+          "startLine": 107,
+          "endLine": 116,
+          "tokens": 172
+        },
+        {
+          "name": "deduplicate",
+          "kind": "fn",
+          "startLine": 119,
+          "endLine": 159,
+          "tokens": 477
+        },
+        {
+          "name": "source_label",
+          "kind": "fn",
+          "startLine": 162,
+          "endLine": 168,
+          "tokens": 63
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "scripts/utils/morning-briefing/briefing/models.py"
+      ],
+      "importance": 0.4395
+    },
+    "scripts/utils/morning-briefing/briefing/pipeline.py": {
+      "description": "Ablauf: sammeln, bereinigen, anonymisieren, zusammenfassen, planen.",
+      "tokens": 1102,
+      "hash": "c70fa82759e663df",
+      "size": 3864,
+      "mtimeMs": 1787554041870.0022,
+      "updatedAt": "2026-09-21T16:32:35.323Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "collect_all",
+          "kind": "fn",
+          "startLine": 22,
+          "endLine": 42,
+          "tokens": 291
+        },
+        {
+          "name": "sanitize",
+          "kind": "fn",
+          "startLine": 45,
+          "endLine": 56,
+          "tokens": 186
+        },
+        {
+          "name": "run",
+          "kind": "fn",
+          "startLine": 59,
+          "endLine": 104,
+          "tokens": 477
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "scripts/utils/morning-briefing/briefing/collectors/__init__.py",
+        "scripts/utils/morning-briefing/briefing/config.py",
+        "scripts/utils/morning-briefing/briefing/models.py",
+        "scripts/utils/morning-briefing/briefing/normalize.py",
+        "scripts/utils/morning-briefing/briefing/plan.py",
+        "scripts/utils/morning-briefing/briefing/privacy.py",
+        "scripts/utils/morning-briefing/briefing/summarize.py"
+      ],
+      "importance": 0.2198
+    },
+    "scripts/utils/morning-briefing/briefing/plan.py": {
+      "description": "Regelbasierte Priorisierung und Tagesplanung.",
+      "tokens": 2681,
+      "hash": "b547763b75bcf038",
+      "size": 9403,
+      "mtimeMs": 1787554041870.1382,
+      "updatedAt": "2026-09-21T16:32:35.324Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "classify",
+          "kind": "fn",
+          "startLine": 60,
+          "endLine": 88,
+          "tokens": 336
+        },
+        {
+          "name": "_mentions_today",
+          "kind": "fn",
+          "startLine": 91,
+          "endLine": 102,
+          "tokens": 144
+        },
+        {
+          "name": "derive_actions",
+          "kind": "fn",
+          "startLine": 105,
+          "endLine": 108,
+          "tokens": 61
+        },
+        {
+          "name": "fallback_summary",
+          "kind": "fn",
+          "startLine": 111,
+          "endLine": 119,
+          "tokens": 124
+        },
+        {
+          "name": "_bucket_for",
+          "kind": "fn",
+          "startLine": 122,
+          "endLine": 131,
+          "tokens": 103
+        },
+        {
+          "name": "free_slots",
+          "kind": "fn",
+          "startLine": 134,
+          "endLine": 166,
+          "tokens": 319
+        },
+        {
+          "name": "_parse_time",
+          "kind": "fn",
+          "startLine": 169,
+          "endLine": 171,
+          "tokens": 36
+        },
+        {
+          "name": "build_briefing",
+          "kind": "fn",
+          "startLine": 174,
+          "endLine": 252,
+          "tokens": 824
+        },
+        {
+          "name": "_conflicts",
+          "kind": "fn",
+          "startLine": 255,
+          "endLine": 283,
+          "tokens": 346
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "def classify(item: Item, now: datetime) -> tuple[Priority, str]:\ndef _mentions_today(item: Item, now: datetime) -> bool:\ndef derive_actions(item: Item) -> list[str]:\ndef fallback_summary(item: Item) -> str:\ndef _bucket_for(priority: Priority, due_today: bool) -> Bucket:\ndef free_slots(\ndef _parse_time(value: str) -> time:\ndef build_briefing(\ndef _conflicts(",
+      "imports": [
+        "scripts/utils/morning-briefing/briefing/models.py",
+        "scripts/utils/morning-briefing/briefing/normalize.py",
+        "scripts/utils/morning-briefing/briefing/summarize.py"
+      ],
+      "importance": 0.2254
+    },
+    "scripts/utils/morning-briefing/briefing/privacy.py": {
+      "description": "Lokale Datenschutzschicht.",
+      "tokens": 2677,
+      "hash": "17528fa981995df6",
+      "size": 9428,
+      "mtimeMs": 1787554041870.2957,
+      "updatedAt": "2026-09-21T16:32:35.324Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "RedactionReport",
+          "kind": "class",
+          "startLine": 91,
+          "endLine": 96,
+          "tokens": 58
+        },
+        {
+          "name": "Redactor",
+          "kind": "class",
+          "startLine": 99,
+          "endLine": 237,
+          "tokens": 1673
+        },
+        {
+          "name": "Redactor.__init__",
+          "kind": "method",
+          "startLine": 102,
+          "endLine": 116,
+          "tokens": 169
+        },
+        {
+          "name": "Redactor._placeholder",
+          "kind": "method",
+          "startLine": 119,
+          "endLine": 129,
+          "tokens": 127
+        },
+        {
+          "name": "Redactor.redact",
+          "kind": "method",
+          "startLine": 137,
+          "endLine": 138,
+          "tokens": 26
+        },
+        {
+          "name": "Redactor.redact_report",
+          "kind": "method",
+          "startLine": 140,
+          "endLine": 203,
+          "tokens": 867
+        },
+        {
+          "name": "Redactor.restore",
+          "kind": "method",
+          "startLine": 206,
+          "endLine": 216,
+          "tokens": 132
+        },
+        {
+          "name": "Redactor.audit",
+          "kind": "method",
+          "startLine": 218,
+          "endLine": 237,
+          "tokens": 208
+        },
+        {
+          "name": "_label_category",
+          "kind": "fn",
+          "startLine": 240,
+          "endLine": 245,
+          "tokens": 65
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "class RedactionReport:\nclass Redactor:\n    def __init__(\n    def _placeholder(self, category: str, value: str) -> str:\n    def redact(self, text: str | None) -> str:\n    def redact_report(self, text: str | None) -> RedactionReport:\n    def restore(self, text: str, categories: tuple[str, ...] = RESTORABLE) -> str:\n    def audit(self, text: str | None) -> list[str]:\ndef _label_category(label: str) -> str:",
+      "importance": 0.3757
+    },
+    "scripts/utils/morning-briefing/briefing/render.py": {
+      "description": "Ausgabe des Briefings als Terminaltext und als lokale HTML-Datei.",
+      "tokens": 1807,
+      "hash": "a493843a07e379ea",
+      "size": 6323,
+      "mtimeMs": 1787554041870.418,
+      "updatedAt": "2026-09-21T16:32:35.324Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "render_text",
+          "kind": "fn",
+          "startLine": 21,
+          "endLine": 60,
+          "tokens": 458
+        },
+        {
+          "name": "_text_task",
+          "kind": "fn",
+          "startLine": 63,
+          "endLine": 73,
+          "tokens": 176
+        },
+        {
+          "name": "render_html",
+          "kind": "fn",
+          "startLine": 76,
+          "endLine": 142,
+          "tokens": 954
+        },
+        {
+          "name": "write_html",
+          "kind": "fn",
+          "startLine": 145,
+          "endLine": 149,
+          "tokens": 86
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "scripts/utils/morning-briefing/briefing/models.py",
+        "scripts/utils/morning-briefing/briefing/normalize.py",
+        "scripts/utils/morning-briefing/briefing/privacy.py"
+      ],
+      "importance": 0.2198
+    },
+    "scripts/utils/morning-briefing/briefing/summarize.py": {
+      "description": "Anbindung der Claude CLI.",
+      "tokens": 1762,
+      "hash": "6a1b9cc79bcc1a3b",
+      "size": 6175,
+      "mtimeMs": 1787554041870.5044,
+      "updatedAt": "2026-09-21T16:32:35.324Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "AiTask",
+          "kind": "class",
+          "startLine": 45,
+          "endLine": 51,
+          "tokens": 37
+        },
+        {
+          "name": "ClaudeSummarizer",
+          "kind": "class",
+          "startLine": 54,
+          "endLine": 182,
+          "tokens": 1303
+        },
+        {
+          "name": "ClaudeSummarizer.__init__",
+          "kind": "method",
+          "startLine": 57,
+          "endLine": 68,
+          "tokens": 89
+        },
+        {
+          "name": "ClaudeSummarizer.build_prompt",
+          "kind": "method",
+          "startLine": 74,
+          "endLine": 99,
+          "tokens": 286
+        },
+        {
+          "name": "ClaudeSummarizer.summarize",
+          "kind": "method",
+          "startLine": 101,
+          "endLine": 148,
+          "tokens": 468
+        },
+        {
+          "name": "ClaudeSummarizer.parse",
+          "kind": "method",
+          "startLine": 150,
+          "endLine": 182,
+          "tokens": 398
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "scripts/utils/morning-briefing/briefing/models.py",
+        "scripts/utils/morning-briefing/briefing/normalize.py",
+        "scripts/utils/morning-briefing/briefing/privacy.py"
+      ],
+      "importance": 0.3104
+    },
+    "scripts/utils/morning-briefing/config.example.yaml": {
+      "description": "Konfiguration des Morgenbriefings.",
+      "tokens": 328,
+      "hash": "7e29ead84794a144",
+      "size": 1147,
+      "mtimeMs": 1787554041870.5723,
+      "updatedAt": "2026-09-21T16:32:35.324Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/morning-briefing/install-windows.ps1": {
+      "description": "Requires -Version 5.1",
+      "tokens": 562,
+      "hash": "19f3595089d72064",
+      "size": 2104,
+      "mtimeMs": 1787554041870.6467,
+      "updatedAt": "2026-09-21T16:32:35.325Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/morning-briefing/main.py": {
+      "description": "Morgenbriefing aus Outlook, Teams und Autotask.",
+      "tokens": 1304,
+      "hash": "d8ecc85d773044b8",
+      "size": 4576,
+      "mtimeMs": 1787554041870.7246,
+      "updatedAt": "2026-09-21T16:32:35.325Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "parse_args",
+          "kind": "fn",
+          "startLine": 38,
+          "endLine": 55,
+          "tokens": 277
+        },
+        {
+          "name": "_now",
+          "kind": "fn",
+          "startLine": 58,
+          "endLine": 62,
+          "tokens": 48
+        },
+        {
+          "name": "do_login",
+          "kind": "fn",
+          "startLine": 65,
+          "endLine": 92,
+          "tokens": 355
+        },
+        {
+          "name": "main",
+          "kind": "fn",
+          "startLine": 95,
+          "endLine": 128,
+          "tokens": 291
+        }
+      ],
+      "symbolSource": "ts",
+      "imports": [
+        "scripts/utils/morning-briefing/briefing/collectors/__init__.py",
+        "scripts/utils/morning-briefing/briefing/config.py",
+        "scripts/utils/morning-briefing/briefing/demo.py",
+        "scripts/utils/morning-briefing/briefing/pipeline.py",
+        "scripts/utils/morning-briefing/briefing/render.py",
+        "scripts/utils/morning-briefing/briefing/collectors/autotask.py",
+        "scripts/utils/morning-briefing/briefing/collectors/microsoft.py",
+        "scripts/utils/morning-briefing/briefing/summarize.py"
+      ],
+      "importance": 0.1987
+    },
+    "scripts/utils/morning-briefing/README.md": {
+      "description": "Project documentation",
+      "tokens": 1527,
+      "hash": "5d292ff3eef437b0",
+      "size": 6156,
+      "mtimeMs": 1787554041868.723,
+      "updatedAt": "2026-09-21T16:32:35.325Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/morning-briefing/requirements.txt": {
+      "description": "Python dependencies",
+      "tokens": 8,
+      "hash": "19699703efdb93d1",
+      "size": 29,
+      "mtimeMs": 1787554041870.8105,
+      "updatedAt": "2026-09-21T16:32:35.325Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/morning-briefing/tests/test_pipeline.py": {
+      "description": "Tests für Deduplizierung, Priorisierung und den vollständigen Ablauf.",
+      "tokens": 1410,
+      "hash": "ce55d2089d182d04",
+      "size": 4936,
+      "mtimeMs": 1787554041870.936,
+      "updatedAt": "2026-09-21T16:32:35.325Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "_config",
+          "kind": "fn",
+          "startLine": 24,
+          "endLine": 28,
+          "tokens": 40
+        },
+        {
+          "name": "test_duplicates_across_sources_are_merged",
+          "kind": "fn",
+          "startLine": 31,
+          "endLine": 45,
+          "tokens": 155
+        },
+        {
+          "name": "test_calendar_entries_are_never_merged",
+          "kind": "fn",
+          "startLine": 48,
+          "endLine": 54,
+          "tokens": 98
+        },
+        {
+          "name": "test_outage_is_critical",
+          "kind": "fn",
+          "startLine": 57,
+          "endLine": 67,
+          "tokens": 88
+        },
+        {
+          "name": "test_tomorrow_from_yesterday_means_today",
+          "kind": "fn",
+          "startLine": 70,
+          "endLine": 81,
+          "tokens": 109
+        },
+        {
+          "name": "test_pleasantry_is_information_only",
+          "kind": "fn",
+          "startLine": 84,
+          "endLine": 94,
+          "tokens": 89
+        },
+        {
+          "name": "test_signature_and_quote_are_removed",
+          "kind": "fn",
+          "startLine": 97,
+          "endLine": 99,
+          "tokens": 49
+        },
+        {
+          "name": "test_full_run_is_anonymized_and_planned",
+          "kind": "fn",
+          "startLine": 102,
+          "endLine": 116,
+          "tokens": 177
+        },
+        {
+          "name": "test_prompt_contains_no_contact_data",
+          "kind": "fn",
+          "startLine": 119,
+          "endLine": 128,
+          "tokens": 150
+        },
+        {
+          "name": "test_ai_response_with_unknown_id_is_dropped",
+          "kind": "fn",
+          "startLine": 131,
+          "endLine": 139,
+          "tokens": 100
+        }
+      ],
+      "symbolSource": "ts",
+      "importance": 0.1987
+    },
+    "scripts/utils/morning-briefing/tests/test_privacy.py": {
+      "description": "Tests der Datenschutzschicht.",
+      "tokens": 982,
+      "hash": "693c3fa702b5b476",
+      "size": 3437,
+      "mtimeMs": 1787554041871.0125,
+      "updatedAt": "2026-09-21T16:32:35.325Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "test_contact_details_are_replaced",
+          "kind": "fn",
+          "startLine": 13,
+          "endLine": 25,
+          "tokens": 137
+        },
+        {
+          "name": "test_phone_is_replaced_completely",
+          "kind": "fn",
+          "startLine": 28,
+          "endLine": 39,
+          "tokens": 128
+        },
+        {
+          "name": "test_dates_and_times_are_kept",
+          "kind": "fn",
+          "startLine": 42,
+          "endLine": 46,
+          "tokens": 55
+        },
+        {
+          "name": "test_names_are_kept",
+          "kind": "fn",
+          "startLine": 49,
+          "endLine": 52,
+          "tokens": 44
+        },
+        {
+          "name": "test_labelled_values_are_replaced",
+          "kind": "fn",
+          "startLine": 55,
+          "endLine": 60,
+          "tokens": 74
+        },
+        {
+          "name": "test_company_and_address_are_replaced",
+          "kind": "fn",
+          "startLine": 63,
+          "endLine": 68,
+          "tokens": 90
+        },
+        {
+          "name": "test_placeholders_are_stable",
+          "kind": "fn",
+          "startLine": 71,
+          "endLine": 75,
+          "tokens": 67
+        },
+        {
+          "name": "test_only_safe_categories_are_restored",
+          "kind": "fn",
+          "startLine": 78,
+          "endLine": 84,
+          "tokens": 104
+        },
+        {
+          "name": "test_audit_finds_leftovers",
+          "kind": "fn",
+          "startLine": 87,
+          "endLine": 90,
+          "tokens": 51
+        },
+        {
+          "name": "test_injection_is_flagged",
+          "kind": "fn",
+          "startLine": 93,
+          "endLine": 96,
+          "tokens": 52
+        }
+      ],
+      "symbolSource": "ts",
+      "importance": 0.1987
+    },
+    "scripts/utils/scrapers/documentation-scaper/main.py": {
+      "description": "class: convert_pre, convert_code, convert_table, md + 3 more",
+      "tokens": 8002,
+      "hash": "742875ad78c03e72",
+      "size": 28051,
+      "mtimeMs": 1787554041871.308,
+      "updatedAt": "2026-09-21T16:32:35.326Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "ScraperConfig",
+          "kind": "class",
+          "startLine": 56,
+          "endLine": 69,
+          "tokens": 174
+        },
+        {
+          "name": "CustomMarkdownConverter",
+          "kind": "class",
+          "startLine": 72,
+          "endLine": 138,
+          "tokens": 797
+        },
+        {
+          "name": "CustomMarkdownConverter.convert_pre",
+          "kind": "method",
+          "startLine": 75,
+          "endLine": 95,
+          "tokens": 268
+        },
+        {
+          "name": "CustomMarkdownConverter.convert_code",
+          "kind": "method",
+          "startLine": 97,
+          "endLine": 102,
+          "tokens": 76
+        },
+        {
+          "name": "CustomMarkdownConverter.convert_table",
+          "kind": "method",
+          "startLine": 104,
+          "endLine": 138,
+          "tokens": 417
+        },
+        {
+          "name": "md",
+          "kind": "fn",
+          "startLine": 141,
+          "endLine": 143,
+          "tokens": 42
+        },
+        {
+          "name": "DocumentationScraper",
+          "kind": "class",
+          "startLine": 146,
+          "endLine": 701,
+          "tokens": 5662
+        },
+        {
+          "name": "DocumentationScraper.__init__",
+          "kind": "method",
+          "startLine": 289,
+          "endLine": 310,
+          "tokens": 240
+        },
+        {
+          "name": "DocumentationScraper.is_valid_url",
+          "kind": "method",
+          "startLine": 312,
+          "endLine": 350,
+          "tokens": 418
+        },
+        {
+          "name": "DocumentationScraper.normalize_url",
+          "kind": "method",
+          "startLine": 352,
+          "endLine": 374,
+          "tokens": 227
+        },
+        {
+          "name": "DocumentationScraper.fetch_page",
+          "kind": "method",
+          "startLine": 376,
+          "endLine": 397,
+          "tokens": 242
+        },
+        {
+          "name": "DocumentationScraper.extract_content",
+          "kind": "method",
+          "startLine": 399,
+          "endLine": 442,
+          "tokens": 436
+        },
+        {
+          "name": "DocumentationScraper.clean_markdown",
+          "kind": "method",
+          "startLine": 444,
+          "endLine": 464,
+          "tokens": 226
+        },
+        {
+          "name": "DocumentationScraper.extract_links",
+          "kind": "method",
+          "startLine": 466,
+          "endLine": 486,
+          "tokens": 257
+        },
+        {
+          "name": "DocumentationScraper.scrape_page",
+          "kind": "method",
+          "startLine": 488,
+          "endLine": 535,
+          "tokens": 494
+        },
+        {
+          "name": "DocumentationScraper.scrape",
+          "kind": "method",
+          "startLine": 537,
+          "endLine": 562,
+          "tokens": 311
+        },
+        {
+          "name": "DocumentationScraper.save_results",
+          "kind": "method",
+          "startLine": 564,
+          "endLine": 582,
+          "tokens": 192
+        },
+        {
+          "name": "DocumentationScraper._save_single_file",
+          "kind": "method",
+          "startLine": 584,
+          "endLine": 612,
+          "tokens": 379
+        },
+        {
+          "name": "DocumentationScraper._save_multiple_files",
+          "kind": "method",
+          "startLine": 614,
+          "endLine": 646,
+          "tokens": 432
+        },
+        {
+          "name": "DocumentationScraper._save_metadata",
+          "kind": "method",
+          "startLine": 648,
+          "endLine": 671,
+          "tokens": 278
+        },
+        {
+          "name": "DocumentationScraper._url_to_filename",
+          "kind": "method",
+          "startLine": 673,
+          "endLine": 694,
+          "tokens": 201
+        },
+        {
+          "name": "DocumentationScraper._make_anchor",
+          "kind": "method",
+          "startLine": 696,
+          "endLine": 701,
+          "tokens": 74
+        },
+        {
+          "name": "main",
+          "kind": "fn",
+          "startLine": 704,
+          "endLine": 828,
+          "tokens": 974
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "class ScraperConfig:\nclass CustomMarkdownConverter(MarkdownConverter):\n    def convert_pre(self, el, text, parent_tags=None):\n    def convert_code(self, el, text, parent_tags=None):\n    def convert_table(self, el, text, parent_tags=None):\ndef md(soup, **options):\nclass DocumentationScraper:\n    def __init__(self, config: ScraperConfig):\n    def is_valid_url(self, url: str) -> bool:\n    def normalize_url(self, url: str, base_url: str) -> Optional[str]:\n    def fetch_page(self, url: str) -> Optional[str]:\n    def extract_content(self, soup: BeautifulSoup, url: str) -> tuple[str, str]:\n    def clean_markdown(self, markdown: str) -> str:\n    def extract_links(self, soup: BeautifulSoup, base_url: str) -> set:\n    def scrape_page(self, url: str, depth: int = 0) -> set:\n    def scrape(self):\n    def save_results(self):\n    def _save_single_file(self, domain_name: str, timestamp: str):\n    def _save_multiple_files(self, domain_name: str):\n    def _save_metadata(self, domain_name: str, timestamp: str):\n    def _url_to_filename(self, url: str, index: int) -> str:\n    def _make_anchor(self, title: str) -> str:\ndef main():",
+      "importance": 0.1987
+    },
+    "scripts/utils/scrapers/documentation-scaper/README.md": {
+      "description": "Project documentation",
+      "tokens": 1396,
+      "hash": "3b04a6ec7bbf3653",
+      "size": 5715,
+      "mtimeMs": 1787554041871.1763,
+      "updatedAt": "2026-09-21T16:32:35.326Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/scrapers/documentation-scaper/requirements.txt": {
+      "description": "Python dependencies",
+      "tokens": 94,
+      "hash": "d4403cf3166a8769",
+      "size": 378,
+      "mtimeMs": 1787554041871.3838,
+      "updatedAt": "2026-09-21T16:32:35.326Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/snmp-explorer/main.py": {
+      "description": "SNMPExplorerApp: setup_ui, load_xml, extract_item, update_tree + 4 more",
+      "tokens": 1782,
+      "hash": "7872ffff56f12492",
+      "size": 6236,
+      "mtimeMs": 1787554041871.6409,
+      "updatedAt": "2026-09-21T16:32:35.326Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "SNMPExplorerApp",
+          "kind": "class",
+          "startLine": 6,
+          "endLine": 165,
+          "tokens": 1721
+        },
+        {
+          "name": "SNMPExplorerApp.__init__",
+          "kind": "method",
+          "startLine": 7,
+          "endLine": 16,
+          "tokens": 67
+        },
+        {
+          "name": "SNMPExplorerApp.setup_ui",
+          "kind": "method",
+          "startLine": 18,
+          "endLine": 61,
+          "tokens": 547
+        },
+        {
+          "name": "SNMPExplorerApp.load_xml",
+          "kind": "method",
+          "startLine": 63,
+          "endLine": 111,
+          "tokens": 535
+        },
+        {
+          "name": "SNMPExplorerApp.update_tree",
+          "kind": "method",
+          "startLine": 113,
+          "endLine": 124,
+          "tokens": 137
+        },
+        {
+          "name": "SNMPExplorerApp.filter_data",
+          "kind": "method",
+          "startLine": 126,
+          "endLine": 140,
+          "tokens": 145
+        },
+        {
+          "name": "SNMPExplorerApp.show_context_menu",
+          "kind": "method",
+          "startLine": 142,
+          "endLine": 146,
+          "tokens": 62
+        },
+        {
+          "name": "SNMPExplorerApp.copy_oid",
+          "kind": "method",
+          "startLine": 148,
+          "endLine": 155,
+          "tokens": 96
+        },
+        {
+          "name": "SNMPExplorerApp.copy_details",
+          "kind": "method",
+          "startLine": 157,
+          "endLine": 165,
+          "tokens": 124
+        }
+      ],
+      "symbolSource": "ts",
+      "importance": 0.1987
+    },
+    "scripts/utils/snmp-explorer/README.md": {
+      "description": "Project documentation",
+      "tokens": 292,
+      "hash": "d20150442ad6d6d1",
+      "size": 1177,
+      "mtimeMs": 1787554041871.5317,
+      "updatedAt": "2026-09-21T16:32:35.326Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/tui/aisel/aisel.sh": {
+      "description": "AISel: Hübsches Inline-Menü für AI CLIs",
+      "tokens": 3049,
+      "hash": "67442e7a7b39f527",
+      "size": 10733,
+      "mtimeMs": 1787554041871.9133,
+      "updatedAt": "2026-09-21T16:32:35.327Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/tui/aisel/README.md": {
+      "description": "Project documentation",
+      "tokens": 1403,
+      "hash": "b0dc08cd1d4ccb9f",
+      "size": 5755,
+      "mtimeMs": 1787554041871.8152,
+      "updatedAt": "2026-09-21T16:32:35.327Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/web-automation/autotask/befehle.txt": {
+      "description": "1. System updaten und Python + pip installieren",
+      "tokens": 117,
+      "hash": "4244069912f58c09",
+      "size": 469,
+      "mtimeMs": 1787554041872.5562,
+      "updatedAt": "2026-09-21T16:32:35.327Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/web-automation/autotask/requirements.txt": {
+      "description": "Python dependencies",
+      "tokens": 21,
+      "hash": "552104ef94c56766",
+      "size": 81,
+      "mtimeMs": 1787554041872.6252,
+      "updatedAt": "2026-09-21T16:32:35.327Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "scripts/utils/web-automation/autotask/Start_Autotask.py": {
+      "description": "wait, normalize_browser_viewport, ensure_autotask_window_state, stabilize_presentation_mode + 3 more",
+      "tokens": 7488,
+      "hash": "61108307f513dd3a",
+      "size": 26308,
+      "mtimeMs": 1787554041872.1216,
+      "updatedAt": "2026-09-21T16:32:35.328Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "wait",
+          "kind": "fn",
+          "startLine": 37,
+          "endLine": 39,
+          "tokens": 29
+        },
+        {
+          "name": "_env_bool",
+          "kind": "fn",
+          "startLine": 42,
+          "endLine": 47,
+          "tokens": 73
+        },
+        {
+          "name": "normalize_browser_viewport",
+          "kind": "fn",
+          "startLine": 50,
+          "endLine": 76,
+          "tokens": 302
+        },
+        {
+          "name": "ensure_autotask_window_state",
+          "kind": "fn",
+          "startLine": 79,
+          "endLine": 128,
+          "tokens": 613
+        },
+        {
+          "name": "stabilize_presentation_mode",
+          "kind": "fn",
+          "startLine": 131,
+          "endLine": 140,
+          "tokens": 136
+        },
+        {
+          "name": "setup_display",
+          "kind": "fn",
+          "startLine": 143,
+          "endLine": 181,
+          "tokens": 524
+        },
+        {
+          "name": "_safe_click",
+          "kind": "fn",
+          "startLine": 184,
+          "endLine": 191,
+          "tokens": 97
+        },
+        {
+          "name": "_click_first_match",
+          "kind": "fn",
+          "startLine": 194,
+          "endLine": 206,
+          "tokens": 134
+        },
+        {
+          "name": "_dismiss_blocking_overlay",
+          "kind": "fn",
+          "startLine": 209,
+          "endLine": 230,
+          "tokens": 261
+        },
+        {
+          "name": "_switch_to_frame_with_text",
+          "kind": "fn",
+          "startLine": 233,
+          "endLine": 257,
+          "tokens": 228
+        },
+        {
+          "name": "enter_presentation_mode",
+          "kind": "fn",
+          "startLine": 260,
+          "endLine": 309,
+          "tokens": 731
+        },
+        {
+          "name": "login_autotask",
+          "kind": "fn",
+          "startLine": 311,
+          "endLine": 611,
+          "tokens": 3989
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "def wait():\ndef _env_bool(name, default=False):\ndef normalize_browser_viewport(driver):\ndef ensure_autotask_window_state(driver):\ndef stabilize_presentation_mode(driver):\ndef setup_display():\ndef _safe_click(driver, locator, timeout=8):\ndef _click_first_match(driver, locators, step_name):\ndef _dismiss_blocking_overlay(driver):\ndef _switch_to_frame_with_text(driver, text, timeout=10):\ndef enter_presentation_mode(driver):\ndef login_autotask():",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/playbooks/check-disk-space.yaml": {
+      "description": "",
+      "tokens": 230,
+      "hash": "91540d0d06960fd9",
+      "size": 802,
+      "mtimeMs": 1787554041872.9834,
+      "updatedAt": "2026-09-21T16:32:35.328Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/playbooks/docker-clean-up.yaml": {
+      "description": "",
+      "tokens": 156,
+      "hash": "15c03df1d43d6d56",
+      "size": 546,
+      "mtimeMs": 1787554041873.0835,
+      "updatedAt": "2026-09-21T16:32:35.328Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/playbooks/install-kubernetes.yaml": {
+      "description": "",
+      "tokens": 1168,
+      "hash": "93ed3ed7b7e91f12",
+      "size": 4088,
+      "mtimeMs": 1787554041873.1536,
+      "updatedAt": "2026-09-21T16:32:35.328Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/playbooks/inventory-k3s.yaml": {
+      "description": "",
+      "tokens": 442,
+      "hash": "d0f8e69a7baaa5ea",
+      "size": 1544,
+      "mtimeMs": 1787554041873.2256,
+      "updatedAt": "2026-09-21T16:32:35.328Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/playbooks/inventory.yaml": {
+      "description": "",
+      "tokens": 1088,
+      "hash": "578820722b61dbbf",
+      "size": 3805,
+      "mtimeMs": 1787554041873.309,
+      "updatedAt": "2026-09-21T16:32:35.329Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/playbooks/k3s-add-disk.yaml": {
+      "description": "",
+      "tokens": 708,
+      "hash": "618c404a0fd68a32",
+      "size": 2482,
+      "mtimeMs": 1787554041873.4067,
+      "updatedAt": "2026-09-21T16:32:35.329Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/playbooks/k3s-extend-disk.yaml": {
+      "description": "",
+      "tokens": 552,
+      "hash": "10c538ef66154ebc",
+      "size": 1935,
+      "mtimeMs": 1787554041873.487,
+      "updatedAt": "2026-09-21T16:32:35.329Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/playbooks/longhorn-fix-known-issues.yaml": {
+      "description": "",
+      "tokens": 210,
+      "hash": "68e218cedee287e8",
+      "size": 733,
+      "mtimeMs": 1787554041873.5496,
+      "updatedAt": "2026-09-21T16:32:35.329Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/playbooks/reboot-required-linux.yaml": {
+      "description": "",
+      "tokens": 210,
+      "hash": "d47263a36b670ab9",
+      "size": 733,
+      "mtimeMs": 1787554041873.617,
+      "updatedAt": "2026-09-21T16:32:35.329Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/playbooks/uninstall-kubernetes.yaml": {
+      "description": "",
+      "tokens": 105,
+      "hash": "cf30255a7566b7d1",
+      "size": 365,
+      "mtimeMs": 1787554041873.6763,
+      "updatedAt": "2026-09-21T16:32:35.329Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/playbooks/update-linux.yaml": {
+      "description": "",
+      "tokens": 107,
+      "hash": "2e5b6ea78ad8cc64",
+      "size": 374,
+      "mtimeMs": 1787554041873.7515,
+      "updatedAt": "2026-09-21T16:32:35.329Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/workflows/Check-Disk-Space.yaml": {
+      "description": "",
+      "tokens": 248,
+      "hash": "266a8fdde5fac06d",
+      "size": 867,
+      "mtimeMs": 1787554041873.86,
+      "updatedAt": "2026-09-21T16:32:35.329Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/workflows/Docker-Clean-Up.yaml": {
+      "description": "",
+      "tokens": 230,
+      "hash": "a8ce8eb49dc15862",
+      "size": 804,
+      "mtimeMs": 1787554041873.9297,
+      "updatedAt": "2026-09-21T16:32:35.330Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/workflows/example.yaml": {
+      "description": "",
+      "tokens": 0,
+      "hash": "e3b0c44298fc1c14",
+      "size": 0,
+      "mtimeMs": 1787554041874.465,
+      "updatedAt": "2026-09-21T16:32:35.330Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/workflows/K3s-Add-Disk.yaml": {
+      "description": "",
+      "tokens": 229,
+      "hash": "eb061d29f037ccc5",
+      "size": 800,
+      "mtimeMs": 1787554041873.991,
+      "updatedAt": "2026-09-21T16:32:35.330Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/workflows/K3s-Extend-Disk.yaml": {
+      "description": "",
+      "tokens": 232,
+      "hash": "1645dbe6acf2255b",
+      "size": 812,
+      "mtimeMs": 1787554041874.0557,
+      "updatedAt": "2026-09-21T16:32:35.330Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/workflows/K3s-Install.yaml": {
+      "description": "",
+      "tokens": 234,
+      "hash": "d2e65186e0b55a23",
+      "size": 817,
+      "mtimeMs": 1787554041874.1116,
+      "updatedAt": "2026-09-21T16:32:35.330Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/workflows/K3s-Longhorn-Fix-Known-Issues.yaml": {
+      "description": "",
+      "tokens": 245,
+      "hash": "5437bf9bbe384d5d",
+      "size": 856,
+      "mtimeMs": 1787554041874.2112,
+      "updatedAt": "2026-09-21T16:32:35.330Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/workflows/K3s-Uninstall.yaml": {
+      "description": "",
+      "tokens": 236,
+      "hash": "53bb69c850cf24fa",
+      "size": 825,
+      "mtimeMs": 1787554041874.2954,
+      "updatedAt": "2026-09-21T16:32:35.330Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/workflows/Reboot-Required-Linux.yaml": {
+      "description": "",
+      "tokens": 270,
+      "hash": "9b7156f0820ce428",
+      "size": 945,
+      "mtimeMs": 1787554041874.3696,
+      "updatedAt": "2026-09-21T16:32:35.330Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/ansible/workflows/Update-Linux.yaml": {
+      "description": "",
+      "tokens": 246,
+      "hash": "f1894403f4a4579d",
+      "size": 859,
+      "mtimeMs": 1787554041874.428,
+      "updatedAt": "2026-09-21T16:32:35.330Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/README.md": {
+      "description": "Project documentation",
+      "tokens": 221,
+      "hash": "071d108eb926f0df",
+      "size": 896,
+      "mtimeMs": 1787554041872.7979,
+      "updatedAt": "2026-09-21T16:32:35.330Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/terraform/workflows/Terraform-DNS.yml": {
+      "description": "",
+      "tokens": 345,
+      "hash": "fb27f928e6034dd5",
+      "size": 1205,
+      "mtimeMs": 1787554041874.643,
+      "updatedAt": "2026-09-21T16:32:35.331Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/terraform/workflows/Terraform-PVE-SRV-01.yml": {
+      "description": "",
+      "tokens": 387,
+      "hash": "1b4e46106239b193",
+      "size": 1353,
+      "mtimeMs": 1787554041874.7266,
+      "updatedAt": "2026-09-21T16:32:35.331Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/terraform/workflows/Terraform-Twingate.yml": {
+      "description": "",
+      "tokens": 350,
+      "hash": "376232f6ccdc3610",
+      "size": 1223,
+      "mtimeMs": 1787554041874.795,
+      "updatedAt": "2026-09-21T16:32:35.331Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/kestra/webhook/workflows/discord_alert_ansible.yml": {
+      "description": "",
+      "tokens": 232,
+      "hash": "332d72629c4e5d4c",
+      "size": 810,
+      "mtimeMs": 1787554041874.9622,
+      "updatedAt": "2026-09-21T16:32:35.331Z",
+      "source": "scan",
+      "importance": 0.1987
+    },
+    "workflows/n8n/README.md": {
+      "description": "Project documentation",
+      "tokens": 555,
+      "hash": "d9b29a8cd4f3cce9",
+      "size": 2251,
+      "mtimeMs": 1787554041875.1316,
+      "updatedAt": "2026-09-21T16:32:35.331Z",
+      "source": "scan",
+      "importance": 0.1987
+    }
+  },
+  "preamble": [
+    "> Project structure index. Auto-maintained by OpenWolf hooks and daemon.",
+    "> Run `openwolf scan` to generate, or wait for the first Claude Code session.",
+    "> Status: Pending initial scan"
+  ]
+}
