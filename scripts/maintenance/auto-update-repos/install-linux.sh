@@ -1,11 +1,31 @@
 #!/usr/bin/env bash
 # install-linux.sh — Installs update-repos.sh as a systemd user service
 # that runs once at every login session.
-# Usage: ./install-linux.sh [/path/to/github/folder]
+# Usage: ./install-linux.sh [/path/to/github/folder] [--recurse] [--force]
 
 set -euo pipefail
 
-GITHUB_FOLDER="${1:-${GITHUB_FOLDER:-$HOME/github}}"
+GITHUB_FOLDER="${GITHUB_FOLDER:-$HOME/github}"
+UPDATER_ARGS=()
+
+if [[ $# -gt 0 && "$1" != -* ]]; then
+    GITHUB_FOLDER="$1"
+    shift
+fi
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --recurse|--recursive|-r) UPDATER_ARGS+=(--recurse) ;;
+        --force|-f)               UPDATER_ARGS+=(--force) ;;
+        *)
+            echo "ERROR: Unknown option: $1" >&2
+            echo "Usage: $0 [/path/to/github/folder] [--recurse] [--force]" >&2
+            exit 2
+            ;;
+    esac
+    shift
+done
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPT_PATH="$SCRIPT_DIR/update-repos.sh"
 SERVICE_DIR="$HOME/.config/systemd/user"
@@ -17,24 +37,22 @@ if [[ ! -f "$SCRIPT_PATH" ]]; then
 fi
 
 chmod +x "$SCRIPT_PATH"
-mkdir -p "$SERVICE_DIR"
+mkdir -p "$SERVICE_DIR" "$HOME/.logs"
 
-cat > "$SERVICE_FILE" <<EOF
+# The script writes its own log file (~/.logs/auto-update-repos.log); systemd captures stdout in the journal.
+# User units cannot order against network-online.target, so the script itself waits for the network.
+cat > "$SERVICE_FILE" <<UNIT
 [Unit]
-Description=Auto-update all Git repositories in $GITHUB_FOLDER
-After=network-online.target
-Wants=network-online.target
+Description=Auto-update all Git repositories (including submodules) in $GITHUB_FOLDER
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/env bash $SCRIPT_PATH $GITHUB_FOLDER
-Environment=HOME=$HOME
-StandardOutput=append:$HOME/.logs/auto-update-repos.log
-StandardError=append:$HOME/.logs/auto-update-repos.log
+TimeoutStartSec=10min
+ExecStart=/usr/bin/env bash "$SCRIPT_PATH" "$GITHUB_FOLDER" ${UPDATER_ARGS[*]:-}
 
 [Install]
 WantedBy=default.target
-EOF
+UNIT
 
 # Reload and enable
 systemctl --user daemon-reload
@@ -43,8 +61,9 @@ systemctl --user enable auto-update-repos.service
 echo "✅ systemd user service installed."
 echo "   Service : $SERVICE_FILE"
 echo "   Folder  : $GITHUB_FOLDER"
+echo "   Options : ${UPDATER_ARGS[*]:-(none)}"
 echo "   Trigger : At every user login session"
 echo ""
-echo "Logs: $HOME/.logs/auto-update-repos.log"
+echo "Logs: $HOME/.logs/auto-update-repos.log  (journalctl --user -u auto-update-repos.service)"
 echo ""
 echo "Manual run: systemctl --user start auto-update-repos.service"

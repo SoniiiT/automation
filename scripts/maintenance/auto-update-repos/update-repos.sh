@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-# update-repos.sh — Safely fast-forwards or forcibly synchronizes Git repositories.
+# update-repos.sh — Safely fast-forwards or forcibly synchronizes Git repositories,
+# including their (nested) submodules.
 # Usage: ./update-repos.sh [/path/to/github/folder] [--recurse|--recursive] [--force]
 # Falls back to $GITHUB_FOLDER or "$HOME/github".
+# Environment: NETWORK_WAIT_SECONDS (default 60, 0 disables), NETWORK_CHECK_URL (default https://github.com).
 
 set -euo pipefail
 
@@ -55,6 +57,32 @@ if ! command -v git >/dev/null 2>&1; then
     exit 1
 fi
 
+# Never block a boot/login run on an interactive credential or host-key prompt.
+export GIT_TERMINAL_PROMPT=0
+if [[ -z "${GIT_SSH_COMMAND:-}" ]] && ! git config --get core.sshCommand >/dev/null 2>&1; then
+    export GIT_SSH_COMMAND="ssh -o BatchMode=yes -o ConnectTimeout=15"
+fi
+
+# At boot/login the network is often not up yet. Wait for it instead of failing every fetch.
+wait_for_network() {
+    local max_wait="${NETWORK_WAIT_SECONDS:-60}"
+    local url="${NETWORK_CHECK_URL:-https://github.com}"
+    local waited=0
+    command -v curl >/dev/null 2>&1 || return 0
+    (( max_wait > 0 )) || return 0
+    until curl -fsS -o /dev/null --max-time 5 "$url" 2>/dev/null; do
+        if (( waited >= max_wait )); then
+            log "Netzwerk nach ${max_wait}s nicht erreichbar ($url). Fetch-Fehler sind möglich." "WARN"
+            return 0
+        fi
+        (( waited == 0 )) && log "Warte auf Netzwerk ($url)..."
+        sleep 3
+        waited=$((waited + 3))
+    done
+}
+
+wait_for_network
+
 if $FORCE; then
     log "=== Starting FORCE repo update run (upstream is source of truth) ===" "WARN"
 else
@@ -72,6 +100,67 @@ current=0
 failed=0
 skipped=0
 found=0
+sub_skipped=0
+
+# Brings the submodules of the current repository (cwd) to the commit recorded by the parent.
+# Return: 0 = ok / no submodules, 1 = skipped for safety, 2 = failed.
+sync_submodules() {
+    local repo_name="$1"
+    local out dirty unsafe
+
+    [[ -f .gitmodules ]] || return 0
+
+    if ! out=$(git submodule sync --recursive 2>&1); then
+        log "[$repo_name] Submodule-Sync fehlgeschlagen: $out" "ERROR"
+        return 2
+    fi
+
+    if $FORCE; then
+        if ! out=$(git submodule update --init --recursive --force 2>&1); then
+            log "[$repo_name] FORCE Submodule-Update fehlgeschlagen: $out" "ERROR"
+            return 2
+        fi
+        if ! out=$(git submodule foreach --quiet --recursive 'git clean -fd' 2>&1); then
+            log "[$repo_name] FORCE Submodule-Clean fehlgeschlagen: $out" "ERROR"
+            return 2
+        fi
+        log "[$repo_name] FORCE: Submodule auf den vom Parent gespeicherten Commit gesetzt." "WARN"
+        return 0
+    fi
+
+    if ! dirty=$(git submodule foreach --quiet --recursive \
+        'git status --porcelain=v1 --untracked-files=all | sed "s|^|$displaypath: |"' 2>&1); then
+        log "[$repo_name] Submodule-Status konnte nicht gelesen werden: $dirty" "ERROR"
+        return 2
+    fi
+    if [[ -n "$dirty" ]]; then
+        log "[$repo_name] Submodule haben lokale Änderungen. Submodule-Update übersprungen: ${dirty//$'\n'/ | }" "WARN"
+        return 1
+    fi
+
+    # Only move a submodule when its current commit is an ancestor of the recorded one (i.e. it is behind).
+    if ! unsafe=$(git submodule foreach --quiet --recursive '
+        [ "$(git rev-parse HEAD)" = "$sha1" ] && exit 0
+        git cat-file -e "$sha1^{commit}" 2>/dev/null || exit 0
+        git merge-base --is-ancestor HEAD "$sha1" || echo "$displaypath"
+    ' 2>&1); then
+        log "[$repo_name] Submodule-Prüfung fehlgeschlagen: $unsafe" "ERROR"
+        return 2
+    fi
+    if [[ -n "$unsafe" ]]; then
+        log "[$repo_name] Submodule mit lokalen Commits bzw. neuerem Stand als im Parent. Submodule-Update übersprungen: ${unsafe//$'\n'/, }" "WARN"
+        return 1
+    fi
+
+    if ! out=$(git submodule update --init --recursive 2>&1); then
+        log "[$repo_name] Submodule-Update fehlgeschlagen: $out" "ERROR"
+        return 2
+    fi
+    if [[ -n "$out" ]]; then
+        log "[$repo_name] Submodule aktualisiert: ${out//$'\n'/ | }"
+    fi
+    return 0
+}
 
 process_repo() {
     local repo_path="$1"
@@ -79,7 +168,7 @@ process_repo() {
     repo_name="${repo_name##*/}"
     local branch upstream remote status_output fetch_output count_output pre_merge_status
     local clean_preview reset_output clean_output
-    local ahead behind
+    local ahead behind sub_rc
     local has_local_changes=false
 
     found=$((found + 1))
@@ -91,7 +180,7 @@ process_repo() {
         return
     fi
 
-    if ! status_output=$(git status --porcelain=v1 --untracked-files=all 2>&1); then
+    if ! status_output=$(git status --porcelain=v1 --untracked-files=all --ignore-submodules=all 2>&1); then
         log "[$repo_name] Git-Status konnte nicht gelesen werden: $status_output" "ERROR"
         failed=$((failed + 1))
         popd >/dev/null
@@ -172,7 +261,13 @@ process_repo() {
         fi
 
         log "[$repo_name] FORCE synchronisiert: $branch -> $upstream. Ignorierte Dateien bleiben erhalten." "WARN"
-        forced=$((forced + 1))
+        sub_rc=0
+        sync_submodules "$repo_name" || sub_rc=$?
+        if (( sub_rc == 2 )); then
+            failed=$((failed + 1))
+        else
+            forced=$((forced + 1))
+        fi
         popd >/dev/null
         return
     fi
@@ -204,12 +299,19 @@ process_repo() {
 
     if (( behind == 0 )); then
         log "[$repo_name] Bereits aktuell."
-        current=$((current + 1))
+        sub_rc=0
+        sync_submodules "$repo_name" || sub_rc=$?
+        if (( sub_rc == 2 )); then
+            failed=$((failed + 1))
+        else
+            current=$((current + 1))
+            if (( sub_rc == 1 )); then sub_skipped=$((sub_skipped + 1)); fi
+        fi
         popd >/dev/null
         return
     fi
 
-    if ! pre_merge_status=$(git status --porcelain=v1 --untracked-files=all 2>&1); then
+    if ! pre_merge_status=$(git status --porcelain=v1 --untracked-files=all --ignore-submodules=all 2>&1); then
         log "[$repo_name] Git-Status konnte vor dem Aktualisieren nicht gelesen werden: $pre_merge_status" "ERROR"
         failed=$((failed + 1))
         popd >/dev/null
@@ -225,7 +327,14 @@ process_repo() {
 
     if merge_output=$(git merge --ff-only "$upstream" 2>&1); then
         log "[$repo_name] Sicher aktualisiert: $branch -> $upstream ($merge_output)"
-        updated=$((updated + 1))
+        sub_rc=0
+        sync_submodules "$repo_name" || sub_rc=$?
+        if (( sub_rc == 2 )); then
+            failed=$((failed + 1))
+        else
+            updated=$((updated + 1))
+            if (( sub_rc == 1 )); then sub_skipped=$((sub_skipped + 1)); fi
+        fi
     else
         log "[$repo_name] Fast-forward fehlgeschlagen: $merge_output" "ERROR"
         failed=$((failed + 1))
@@ -237,7 +346,7 @@ process_repo() {
 if $RECURSE; then
     while IFS= read -r -d '' git_dir; do
         process_repo "$(dirname "$git_dir")"
-    done < <(find "$GITHUB_FOLDER" -type d -name .git -prune -print0)
+    done < <(find "$GITHUB_FOLDER" -type d -name node_modules -prune -o -type d -name .git -prune -print0)
 else
     for repo_path in "$GITHUB_FOLDER"/*/; do
         [[ -d "$repo_path/.git" ]] || continue
@@ -249,7 +358,7 @@ if (( found == 0 )); then
     log "Keine Git-Repositories in $GITHUB_FOLDER gefunden." "WARN"
 fi
 
-log "=== Done. Updated: $updated | Forced: $forced | Current: $current | Failed: $failed | Skipped: $skipped ==="
+log "=== Done. Updated: $updated | Forced: $forced | Current: $current | Failed: $failed | Skipped: $skipped | Submodule skipped: $sub_skipped ==="
 if (( failed > 0 )); then
     exit 1
 fi

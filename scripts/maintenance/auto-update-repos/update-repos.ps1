@@ -1,12 +1,16 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Updates Git repositories in a specified folder.
+    Updates Git repositories (including their submodules) in a specified folder.
 .DESCRIPTION
     By default, only fast-forwards a branch when the working tree is clean and
     the branch is strictly behind its configured upstream. Local changes,
     untracked files, detached HEADs, missing upstreams, and divergent history
     are skipped. With Force, the upstream becomes the source of truth.
+    Submodules are brought to the commit recorded by the parent repository
+    (git submodule update --init --recursive) after the parent is up to date.
+    Without Force, submodules with local changes or local commits are skipped.
+    Environment: NETWORK_WAIT_SECONDS (default 60, 0 disables), NETWORK_CHECK_URL (default https://github.com).
 .PARAMETER Force
     Makes the configured upstream the source of truth. Resets tracked files
     and removes untracked files and directories, but keeps ignored files.
@@ -59,6 +63,133 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
+# Never block a boot/logon run on an interactive credential or host-key prompt.
+$env:GIT_TERMINAL_PROMPT = "0"
+if (-not $env:GIT_SSH_COMMAND -and -not (& git config --get core.sshCommand 2>$null)) {
+    $env:GIT_SSH_COMMAND = "ssh -o BatchMode=yes -o ConnectTimeout=15"
+}
+
+# At boot/logon the network is often not up yet. Wait for it instead of failing every fetch.
+function Wait-ForNetwork {
+    $maxWait = if ($env:NETWORK_WAIT_SECONDS) { [int]$env:NETWORK_WAIT_SECONDS } else { 60 }
+    $url = if ($env:NETWORK_CHECK_URL) { $env:NETWORK_CHECK_URL } else { "https://github.com" }
+    $hostName = ([uri]$url).Host
+    $waited = 0
+    while ($maxWait -gt 0) {
+        try {
+            [void][System.Net.Dns]::GetHostEntry($hostName)
+            return
+        }
+        catch { }
+        if ($waited -ge $maxWait) {
+            Write-Log "Netzwerk nach ${maxWait}s nicht erreichbar ($url). Fetch-Fehler sind möglich." "WARN"
+            return
+        }
+        if ($waited -eq 0) { Write-Log "Warte auf Netzwerk ($url)..." }
+        Start-Sleep -Seconds 3
+        $waited += 3
+    }
+}
+
+# Returns every folder below $Root that contains a .git directory. Submodules (.git file) are
+# handled through their parent repository; node_modules and links are not descended into.
+function Find-GitRepos {
+    param([string]$Root)
+    $children = @(Get-ChildItem -LiteralPath $Root -Directory -Force -ErrorAction SilentlyContinue)
+    if ($children | Where-Object { $_.Name -eq ".git" }) {
+        Get-Item -LiteralPath $Root
+    }
+    foreach ($child in $children) {
+        if ($child.Name -in @(".git", "node_modules")) { continue }
+        if ($child.Attributes -band [IO.FileAttributes]::ReparsePoint) { continue }
+        Find-GitRepos -Root $child.FullName
+    }
+}
+
+# Brings the submodules of the current repository (cwd) to the commit recorded by the parent.
+# Returns: 0 = ok / no submodules, 1 = skipped for safety, 2 = failed.
+function Sync-Submodules {
+    param([string]$RepoName)
+
+    if (-not (Test-Path -LiteralPath ".gitmodules" -PathType Leaf)) { return 0 }
+
+    $syncResult = Invoke-GitCommand @("submodule", "sync", "--recursive")
+    if ($syncResult.ExitCode -ne 0) {
+        Write-Log "[$RepoName] Submodule-Sync fehlgeschlagen: $(Get-CommandOutput $syncResult.Output)" "ERROR"
+        return 2
+    }
+
+    if ($Force) {
+        $updateResult = Invoke-GitCommand @("submodule", "update", "--init", "--recursive", "--force")
+        if ($updateResult.ExitCode -ne 0) {
+            Write-Log "[$RepoName] FORCE Submodule-Update fehlgeschlagen: $(Get-CommandOutput $updateResult.Output)" "ERROR"
+            return 2
+        }
+        $cleanResult = Invoke-GitCommand @("submodule", "foreach", "--quiet", "--recursive", 'git clean -fd')
+        if ($cleanResult.ExitCode -ne 0) {
+            Write-Log "[$RepoName] FORCE Submodule-Clean fehlgeschlagen: $(Get-CommandOutput $cleanResult.Output)" "ERROR"
+            return 2
+        }
+        Write-Log "[$RepoName] FORCE: Submodule auf den vom Parent gespeicherten Commit gesetzt." "WARN"
+        return 0
+    }
+
+    # One line per initialized submodule: "<recorded sha> <path relative to this repo>"
+    $listResult = Invoke-GitCommand @("submodule", "foreach", "--quiet", "--recursive", 'echo $sha1 $displaypath')
+    if ($listResult.ExitCode -ne 0) {
+        Write-Log "[$RepoName] Submodule konnten nicht aufgelistet werden: $(Get-CommandOutput $listResult.Output)" "ERROR"
+        return 2
+    }
+
+    $dirty = @()
+    $unsafe = @()
+    foreach ($line in @($listResult.Output | ForEach-Object { $_.ToString().Trim() } | Where-Object { $_ })) {
+        $parts = $line -split " ", 2
+        $recorded = $parts[0]
+        $subPath = $parts[1]
+
+        $subStatus = Invoke-GitCommand @("-C", $subPath, "status", "--porcelain=v1", "--untracked-files=all")
+        if ($subStatus.ExitCode -ne 0) {
+            Write-Log "[$RepoName] Submodule-Status konnte nicht gelesen werden ($subPath): $(Get-CommandOutput $subStatus.Output)" "ERROR"
+            return 2
+        }
+        if (Get-CommandOutput $subStatus.Output) {
+            $dirty += $subPath
+            continue
+        }
+
+        # Only move a submodule when its current commit is an ancestor of the recorded one (i.e. it is behind).
+        $head = Get-CommandOutput (Invoke-GitCommand @("-C", $subPath, "rev-parse", "HEAD")).Output
+        if ($head -eq $recorded) { continue }
+        $known = Invoke-GitCommand @("-C", $subPath, "cat-file", "-e", ($recorded + '^{commit}'))
+        if ($known.ExitCode -ne 0) { continue }
+        $ancestor = Invoke-GitCommand @("-C", $subPath, "merge-base", "--is-ancestor", "HEAD", $recorded)
+        if ($ancestor.ExitCode -ne 0) { $unsafe += $subPath }
+    }
+
+    if ($dirty.Count -gt 0) {
+        Write-Log "[$RepoName] Submodule haben lokale Änderungen. Submodule-Update übersprungen: $($dirty -join ', ')" "WARN"
+        return 1
+    }
+    if ($unsafe.Count -gt 0) {
+        Write-Log "[$RepoName] Submodule mit lokalen Commits bzw. neuerem Stand als im Parent. Submodule-Update übersprungen: $($unsafe -join ', ')" "WARN"
+        return 1
+    }
+
+    $updateResult = Invoke-GitCommand @("submodule", "update", "--init", "--recursive")
+    if ($updateResult.ExitCode -ne 0) {
+        Write-Log "[$RepoName] Submodule-Update fehlgeschlagen: $(Get-CommandOutput $updateResult.Output)" "ERROR"
+        return 2
+    }
+    $updateOutput = Get-CommandOutput $updateResult.Output
+    if ($updateOutput) {
+        Write-Log "[$RepoName] Submodule aktualisiert: $updateOutput"
+    }
+    return 0
+}
+
+Wait-ForNetwork
+
 if (-not (Test-Path $GithubFolder -PathType Container)) {
     Write-Log "GitHub-Ordner nicht gefunden: $GithubFolder" "ERROR"
     exit 1
@@ -73,16 +204,12 @@ else {
 Write-Log "Scanning: $GithubFolder$(if ($Recurse) { ' (recursive)' })"
 
 if ($Recurse) {
-    $repos = @(
-        Get-ChildItem -Path $GithubFolder -Directory -Recurse -Force |
-            Where-Object { $_.Name -eq ".git" } |
-            ForEach-Object { Get-Item $_.Parent.FullName }
-    )
+    $repos = @(Find-GitRepos -Root $GithubFolder)
 }
 else {
     $repos = @(
         Get-ChildItem -Path $GithubFolder -Directory |
-            Where-Object { Test-Path (Join-Path $_.FullName ".git") }
+            Where-Object { Test-Path (Join-Path $_.FullName ".git") -PathType Container }
     )
 }
 
@@ -98,6 +225,7 @@ $forced  = 0
 $current = 0
 $failed  = 0
 $skipped = 0
+$subSkipped = 0
 
 foreach ($repo in $repos) {
     $repoPath = $repo.FullName
@@ -107,7 +235,7 @@ foreach ($repo in $repos) {
     Push-Location $repoPath
 
     try {
-        $statusResult = Invoke-GitCommand @("status", "--porcelain=v1", "--untracked-files=all")
+        $statusResult = Invoke-GitCommand @("status", "--porcelain=v1", "--untracked-files=all", "--ignore-submodules=all")
         if ($statusResult.ExitCode -ne 0) {
             Write-Log "[$repoName] Git-Status konnte nicht gelesen werden: $(Get-CommandOutput $statusResult.Output)" "ERROR"
             $failed++
@@ -193,7 +321,8 @@ foreach ($repo in $repos) {
             }
 
             Write-Log "[$repoName] FORCE synchronisiert: $branch -> $upstream. Ignorierte Dateien bleiben erhalten." "WARN"
-            $forced++
+            $subRc = Sync-Submodules -RepoName $repoName
+            if ($subRc -eq 2) { $failed++ } else { $forced++ }
             continue
         }
 
@@ -222,11 +351,16 @@ foreach ($repo in $repos) {
 
         if ($behind -eq 0) {
             Write-Log "[$repoName] Bereits aktuell."
-            $current++
+            $subRc = Sync-Submodules -RepoName $repoName
+            if ($subRc -eq 2) { $failed++ }
+            else {
+                $current++
+                if ($subRc -eq 1) { $subSkipped++ }
+            }
             continue
         }
 
-        $preMergeStatusResult = Invoke-GitCommand @("status", "--porcelain=v1", "--untracked-files=all")
+        $preMergeStatusResult = Invoke-GitCommand @("status", "--porcelain=v1", "--untracked-files=all", "--ignore-submodules=all")
         if ($preMergeStatusResult.ExitCode -ne 0) {
             Write-Log "[$repoName] Git-Status konnte vor dem Aktualisieren nicht gelesen werden: $(Get-CommandOutput $preMergeStatusResult.Output)" "ERROR"
             $failed++
@@ -242,7 +376,12 @@ foreach ($repo in $repos) {
         $mergeResult = Invoke-GitCommand @("merge", "--ff-only", $upstream)
         if ($mergeResult.ExitCode -eq 0) {
             Write-Log "[$repoName] Sicher aktualisiert: $branch -> $upstream ($(Get-CommandOutput $mergeResult.Output))"
-            $updated++
+            $subRc = Sync-Submodules -RepoName $repoName
+            if ($subRc -eq 2) { $failed++ }
+            else {
+                $updated++
+                if ($subRc -eq 1) { $subSkipped++ }
+            }
         }
         else {
             Write-Log "[$repoName] Fast-forward fehlgeschlagen: $(Get-CommandOutput $mergeResult.Output)" "ERROR"
@@ -258,6 +397,6 @@ foreach ($repo in $repos) {
     }
 }
 
-Write-Log "=== Done. Updated: $updated | Forced: $forced | Current: $current | Failed: $failed | Skipped: $skipped ==="
+Write-Log "=== Done. Updated: $updated | Forced: $forced | Current: $current | Failed: $failed | Skipped: $skipped | Submodule skipped: $subSkipped ==="
 if ($failed -gt 0) { exit 1 }
 exit 0
