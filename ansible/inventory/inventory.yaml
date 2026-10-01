@@ -21,7 +21,7 @@ all:
       ansible_host: 192.168.178.50
     lxc-omada:
       ansible_host: 192.168.178.51
-    lxc-scanopy:
+    lxc-homelable:
       ansible_host: 192.168.178.52
     lxc-pve-helper-scripts:
       ansible_host: 192.168.178.53
@@ -43,12 +43,20 @@ all:
       ansible_host: 192.168.178.31
     docker-srv-03:
       ansible_host: 192.168.178.32
-    
+
     # App Servers
-    ai-srv-01:
-      ansible_host: 192.168.178.90
     app-srv-01:
       ansible_host: 192.168.178.91
+    app-srv-02:
+      ansible_host: 192.168.178.92
+    app-srv-03:
+      ansible_host: 192.168.178.93
+
+    # Windows / Home Automation (keine SSH-Linux-Ziele, nur Dokumentation)
+    dc-srv-01:
+      ansible_host: 192.168.178.80
+    home-srv-01:
+      ansible_host: 192.168.178.8
 
     # K3s Cluster
     # k3s-soniiit-server01:
@@ -103,7 +111,7 @@ all:
         lxc-teleport-proxy:
         lxc-semaphore:
         lxc-omada:
-        lxc-scanopy:
+        lxc-homelable:
         lxc-pve-helper-scripts:
         lxc-cosmos:
         lxc-cockpit:
@@ -114,18 +122,33 @@ all:
       vars:
         ansible_user: soniiit
       hosts:
-        ai-srv-01:
         app-srv-01:
+        app-srv-02:
+        app-srv-03:
         docker-srv-01:
         docker-srv-02:
         docker-srv-03:
         jellyfin-home-01:
 
+    windows_hosts:
+      vars:
+        ansible_connection: winrm
+        ansible_winrm_server_cert_validation: ignore
+      hosts:
+        dc-srv-01:
+
+    home_automation:
+      vars:
+        ansible_user: root
+      hosts:
+        home-srv-01:
+
     # --- Functional Groups ---
     application_servers:
       hosts:
-        ai-srv-01:
         app-srv-01:
+        app-srv-02:
+        app-srv-03:
 
     #demo_servers:
     #  hosts:
