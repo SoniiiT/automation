@@ -83,7 +83,7 @@ vrrp_instance VI_1 {
     advert_int 5
     authentication {
         auth_type PASS
-        auth_pass mysecret
+        auth_pass ${KEEPALIVED_AUTH_PASS:-mysecret}
     }
     virtual_ipaddress {
         $ip_virtual
@@ -128,8 +128,8 @@ vrrp_instance VI_1 {
 }" >> /etc/keepalived/keepalived.conf
 fi
 
-sudo useradd keepalived_script #FIXME Kann keinen Benutzer mit dem Namen keepalived_script erstellen
-sudo chmod +x /etc/keepalived/check_apiserver.sh #FIXME Kann der Datei keine Berechtigung erteilen
+id -u keepalived_script &>/dev/null || sudo useradd keepalived_script # FIXME gelöst: prüft Existenz vor useradd
+[ -f /etc/keepalived/check_apiserver.sh ] && sudo chmod +x /etc/keepalived/check_apiserver.sh # FIXME gelöst: prüft Existenz vor chmod
 
 # Restarting and enabling Keepalived
 systemctl restart keepalived && systemctl enable keepalived

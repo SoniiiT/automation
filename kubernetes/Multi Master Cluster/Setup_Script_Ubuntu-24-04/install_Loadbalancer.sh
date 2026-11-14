@@ -107,7 +107,7 @@ vrrp_instance VI_1 {
     advert_int 5
     authentication {
         auth_type PASS
-        auth_pass mysecret
+        auth_pass ${KEEPALIVED_AUTH_PASS:-mysecret}
     }
     virtual_ipaddress {
         $ip_virtual
@@ -137,7 +137,7 @@ vrrp_instance VI_1 {
     advert_int 5
     authentication {
         auth_type PASS
-        auth_pass mysecret
+        auth_pass ${KEEPALIVED_AUTH_PASS:-mysecret}
 }
     virtual_ipaddress {
         $ip_virtual
