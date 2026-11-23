@@ -36,6 +36,9 @@
 .PARAMETER Setup
     Startet den Setup-Wizard.
 
+.PARAMETER Maintenance
+    Startet das Wartungsmenü: NIC zu SET hinzufügen, Node hinzufügen/entfernen.
+
 .PARAMETER Status
     Zeigt eine read-only Übersicht des Clusters (wenn vorhanden).
 
@@ -70,6 +73,7 @@
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$Setup,
+    [switch]$Maintenance,
     [switch]$Status,
 
     [string[]]$Nodes,
@@ -218,6 +222,147 @@ function New-VSwitchWithSet {
 }
 
 # ---------------------------------------------------------------------------
+# Maintenance-Hilfsfunktionen
+# ---------------------------------------------------------------------------
+function Test-NicComparability {
+    param(
+        [string]$Node,
+        [string[]]$ExistingNics,
+        [string[]]$NewNics
+    )
+    # SET verlangt baugleiche NICs (gleicher Hersteller, Produkt, Treiber).
+    # Holt die NIC-Eigenschaften remote und vergleicht sie.
+    $props = Invoke-RemoteNode -Node $Node -ScriptBlock {
+        param($Names)
+        Get-NetAdapter -Name $Names -ErrorAction SilentlyContinue |
+            Select-Object Name, InterfaceDescription, DriverVersion, Manufacturer
+    } -ArgumentList @(($ExistingNics + $NewNics) | Select-Object -Unique)
+
+    $groups = $props | Group-Object InterfaceDescription
+    if ($groups.Count -gt 1) {
+        Write-Warn "Verschiedene NIC-Typen im Team gefunden: $($groups.Name -join ' | ')"
+        return $false
+    }
+    if ($props.Count -lt ($ExistingNics + $NewNics | Select-Object -Unique).Count) {
+        Write-Warn "Mindestens eine NIC wurde remote nicht gefunden."
+        return $false
+    }
+    return $true
+}
+
+function Add-SetTeamMember {
+    param(
+        [string]$Node,
+        [string]$SwitchName,
+        [string]$NewNic
+    )
+    # Fügt einen NIC zu einem bestehenden SET-vSwitch hinzu. WICHTIG: SET
+    # benötigt baugleiche NICs — vorher prüfen. Der vSwitch wird NICHT neu
+    # erstellt (das würde Management-OS-Konnektivität kurz reißen), sondern
+    # via Set-VMSwitch um die neue NIC erweitert.
+    Invoke-RemoteNode -Node $Node -ScriptBlock {
+        param($Name, $Nic)
+        $sw = Get-VMSwitch -Name $Name -ErrorAction Stop
+        if (-not $sw) { throw "vSwitch '$Name' nicht gefunden auf $env:COMPUTERNAME" }
+
+        # Bestehende Teammitglieder über die InterfaceDescriptions des vSwitch
+        # auflösen. NetAdapterInterfaceDescriptions sind exakt die
+        # InterfaceDescriptions der physischen NICs im Team.
+        $existing = @()
+        foreach ($ifd in $sw.NetAdapterInterfaceDescriptions) {
+            $adapter = Get-NetAdapter -ErrorAction SilentlyContinue |
+                Where-Object { $_.InterfaceDescription -eq $ifd } | Select-Object -First 1
+            if ($adapter) { $existing += $adapter.Name }
+        }
+
+        if ($existing -notcontains $Nic) {
+            $existing += $Nic
+            # Set-VMSwitch ersetzt die Teammitglieder atomar — NICHT den vSwitch
+            # neu erzeugen (das würde Management-OS-Konnektivität kurz reißen).
+            Set-VMSwitch -Name $Name -NetAdapterName $existing -ErrorAction Stop
+            Write-Host "SET-Team '$Name' erweitert um '$Nic' (Mitglieder: $($existing -join ', '))" -ForegroundColor Green
+        } else {
+            Write-Host "NIC '$Nic' ist bereits Mitglied des SET-Teams." -ForegroundColor DarkGray
+        }
+    } -ArgumentList @($SwitchName, $NewNic)
+}
+
+function Add-ClusterNodeSafe {
+    param(
+        [string]$ClusterName,
+        [string]$Node
+    )
+    # Fügt einen Node zum Cluster hinzu. Installiert zuerst die Features
+    # (falls nötig), validiert und fügt dann hinzu.
+    if (-not (Test-RemoteWinRM -Node $Node)) {
+        Write-Fail "WinRM nicht erreichbar auf '$Node'."
+        return $false
+    }
+    Write-Host "  Installiere Features auf '$Node'..." -ForegroundColor DarkGray
+    Invoke-RemoteNode -Node $Node -ScriptBlock {
+        $needed = @('Microsoft-Hyper-V', 'Failover-Clustering')
+        $missing = $needed | Where-Object { (Get-WindowsFeature -Name $_).InstallState -ne 'Installed' }
+        if ($missing) {
+            Install-WindowsFeature -Name $missing -IncludeManagementTools -Restart:$false -ErrorAction Stop
+            Write-Host "Features installiert: $($missing -join ', ')" -ForegroundColor Yellow
+        }
+    }
+
+    if (-not (Get-ClusterNode -Cluster $ClusterName -Name $Node -ErrorAction SilentlyContinue)) {
+        Write-Host "  Validiere mit bestehenden Nodes..." -ForegroundColor DarkGray
+        $existing = Get-ClusterNode -Cluster $ClusterName | Select-Object -ExpandProperty Name
+        $validation = Test-Cluster -Node ($existing + $Node) -ErrorAction Stop
+        Write-Warn "Test-Cluster Report: $($validation.FullName) — rote Punkte prüfen, bevor du fortfährst."
+        $confirm = Read-Host "Node '$Node' wirklich zum Cluster hinzufügen? (j/n)"
+        if ($confirm -match '^(j|J|ja)$') {
+            Add-ClusterNode -Cluster $ClusterName -Name $Node -ErrorAction Stop
+            Write-Ok "Node '$Node' zum Cluster hinzugefügt."
+            return $true
+        }
+    } else {
+        Write-Ok "Node '$Node' ist bereits Cluster-Mitglied."
+        return $true
+    }
+    return $false
+}
+
+function Remove-ClusterNodeSafe {
+    param(
+        [string]$ClusterName,
+        [string]$Node
+    )
+    # Entfernt einen Node sicher: erst alle VMs live migrieren, dann Node raus.
+    $nodeObj = Get-ClusterNode -Cluster $ClusterName -Name $Node -ErrorAction SilentlyContinue
+    if (-not $nodeObj) {
+        Write-Warn "Node '$Node' ist kein Cluster-Mitglied."
+        return $false
+    }
+
+    $vms = Get-VM -ComputerName $Node -ErrorAction SilentlyContinue | Where-Object State -eq 'Running'
+    if ($vms) {
+        Write-Host "  Migriere $($vms.Count) laufende VMs von '$Node'..." -ForegroundColor DarkGray
+        $targets = Get-ClusterNode -Cluster $ClusterName | Where-Object Name -ne $Node | Select-Object -ExpandProperty Name
+        if (-not $targets) {
+            Write-Fail "Kein Ziel-Node für Live-Migration vorhanden. Abbruch."
+            return $false
+        }
+        foreach ($vm in $vms) {
+            Write-Host "    Move-VM '$($vm.Name)' -> $($targets -join ', ')" -ForegroundColor DarkGray
+            Move-VM -Name $vm.Name -ComputerName $Node -DestinationHost $targets[0] -ErrorAction Stop
+        }
+        Write-Ok "Alle VMs migriert."
+    }
+
+    $confirm = Read-Host "Node '$Node' wirklich aus dem Cluster entfernen? (j/n)"
+    if ($confirm -match '^(j|J|ja)$') {
+        Remove-ClusterNode -Cluster $ClusterName -Name $Node -ErrorAction Stop
+        Write-Ok "Node '$Node' entfernt."
+        return $true
+    }
+    return $false
+}
+
+# ---------------------------------------------------------------------------
 # Voraussetzungen prüfen
 # ---------------------------------------------------------------------------
 if (-not (Test-Admin)) {
@@ -226,8 +371,8 @@ if (-not (Test-Admin)) {
     exit 1
 }
 
-if (-not ($Setup -or $Status)) {
-    Write-Fail "Kein Modus gewählt. Nutze -Setup oder -Status."
+if (-not ($Setup -or $Maintenance -or $Status)) {
+    Write-Fail "Kein Modus gewählt. Nutze -Setup, -Maintenance oder -Status."
     Stop-Transcript | Out-Null
     exit 1
 }
@@ -251,6 +396,84 @@ if ($Status) {
     } else {
         Write-Warn "Failover-Clustering-Module nicht auf der Management-Maschine installiert."
     }
+    Stop-Transcript | Out-Null
+    exit 0
+}
+
+# ---------------------------------------------------------------------------
+# Modus: MAINTENANCE
+# ---------------------------------------------------------------------------
+if ($Maintenance) {
+    Write-Step "Maintenance-Menü"
+
+    $cluster = Get-Cluster -ErrorAction SilentlyContinue
+    if (-not $cluster) {
+        Write-Warn "Kein Cluster in diesem Kontext gefunden. SET-Wartung funktioniert weiterhin, Node-Add/Remove aber nicht."
+    }
+    $clusterName = $cluster.Name
+
+    Write-Host "`nWähle eine Aktion:" -ForegroundColor Cyan
+    Write-Host "  1) NIC zu SET-Team hinzufügen"
+    Write-Host "  2) Node zum Cluster hinzufügen"
+    Write-Host "  3) Node aus dem Cluster entfernen"
+    $action = Read-Host "Auswahl (1/2/3)"
+
+    switch ($action) {
+        '1' {
+            if (-not $Nodes) {
+                $Nodes = @(Read-Host "Node(s) mit dem SET-Team (kommagetrennt)")
+            }
+            $switchName = Read-Host "Name des bestehenden SET-vSwitch (Default: vSwitchSET)"
+            if (-not $switchName) { $switchName = 'vSwitchSET' }
+            $newNic = Read-Host "Neue NIC, die hinzugefügt werden soll"
+
+            foreach ($node in $Nodes) {
+                if (-not (Test-RemoteWinRM -Node $node)) {
+                    Write-Fail "WinRM nicht erreichbar auf '$node'."
+                    continue
+                }
+                # Baugleich-Check: bestehende Team-NICs gegen die neue prüfen
+                $swInfo = Invoke-RemoteNode -Node $node -ScriptBlock {
+                    param($Name)
+                    $sw = Get-VMSwitch -Name $Name -ErrorAction SilentlyContinue
+                    if ($sw) { $sw.NetAdapterInterfaceDescriptions } else { @() }
+                } -ArgumentList @($switchName)
+                $existingNics = @($swInfo | ForEach-Object {
+                    Invoke-RemoteNode -Node $node -ScriptBlock {
+                        param($Ifd)
+                        (Get-NetAdapter | Where-Object InterfaceDescription -eq $Ifd | Select-Object -First 1).Name
+                    } -ArgumentList @($_)
+                })
+                if (Test-NicComparability -Node $node -ExistingNics $existingNics -NewNics @($newNic)) {
+                    Add-SetTeamMember -Node $node -SwitchName $switchName -NewNic $newNic
+                } else {
+                    Write-Fail "Baugleich-Check fehlgeschlagen — NIC '$newNic' ist nicht kompatibel mit dem bestehenden Team auf '$node'. Abbruch für diesen Node."
+                }
+            }
+        }
+        '2' {
+            if (-not $clusterName) {
+                Write-Fail "Kein Cluster gefunden. Node-Add ist ohne Cluster nicht möglich."
+                Stop-Transcript | Out-Null
+                exit 1
+            }
+            $newNode = Read-Host "Hostname des hinzuzufügenden Nodes"
+            Add-ClusterNodeSafe -ClusterName $clusterName -Node $newNode
+        }
+        '3' {
+            if (-not $clusterName) {
+                Write-Fail "Kein Cluster gefunden. Node-Remove ist ohne Cluster nicht möglich."
+                Stop-Transcript | Out-Null
+                exit 1
+            }
+            $remNode = Read-Host "Hostname des zu entfernenden Nodes"
+            Remove-ClusterNodeSafe -ClusterName $clusterName -Node $remNode
+        }
+        default {
+            Write-Fail "Ungültige Auswahl."
+        }
+    }
+
     Stop-Transcript | Out-Null
     exit 0
 }

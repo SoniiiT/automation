@@ -7,7 +7,19 @@ PowerShell-Setup-Skript für Hyper-V-Hosts und Failover-Cluster (Windows Server 
 | Parameter | Zweck |
 | --- | --- |
 | `-Setup` | Interaktiver Setup-Wizard: Hyper-V installieren, optional Failover-Cluster aufbauen |
+| `-Maintenance` | Wartungsmenü: NIC zu SET hinzufügen, Node hinzufügen/entfernen |
 | `-Status` | Read-only Übersicht: Cluster-Gesundheit, Nodes, CSVs |
+
+## Wartung (`-Maintenance`)
+
+```powershell
+.\hyperv-cluster.ps1 -Maintenance
+```
+
+Menü:
+1. **NIC zu SET-Team hinzufügen** — mit Baugleich-Check (gleicher NIC-Typ/Treiber), vSwitch bleibt bestehen
+2. **Node zum Cluster hinzufügen** — Features installieren, `Test-Cluster`, `Add-ClusterNode`
+3. **Node aus dem Cluster entfernen** — laufende VMs live migrieren, dann `Remove-ClusterNode`
 
 ## Beispiele
 
@@ -57,10 +69,11 @@ Das Skript fragt den Storage-Weg interaktiv ab (oder via `-StoragePath`):
   muss aber auf den Owner-Nodes passieren (siehe TODO im Skript). Vor echtem
   Produktions-Einsatz nachziehen.
 - Storage-Replica und S2D-Pool-Erstellung sind als Grundgerüst vorhanden, aber
-  die vollständige Replica-Routine ist nicht ausimplementiert — geplant für die
-  Maintenance-Iteration.
+  die vollständige Replica-Routine ist nicht ausimplementiert — geplant für eine
+  kommende Iteration.
 
-## Geplante nächste Iteration
+## Geplante nächste Iterationen
 
-`-Maintenance`-Modus: NIC zu SET hinzufügen, Node hinzufügen/entfernen
-(VMs drainen + Live-Migrate), Storage erweitern.
+- Storage-Replica-Routine ausimplementieren
+- Storage-Erweiterung (neue LUN/S2D-Capacity) im Maintenance-Modus
+- WhatIf-Durchgänge gegen echte Hardware, sobald Tony auf Windows-Hosts testet
